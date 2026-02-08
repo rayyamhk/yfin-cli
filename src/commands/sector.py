@@ -1,6 +1,29 @@
+import pandas as pd
 import yfinance as yf
 from ..typer import SectorKeyType
 from ..decorators import handle_errors, with_output
+
+
+@handle_errors
+@with_output
+def sector_keys():
+    """
+    Get all available sector keys.
+    """
+    data = [
+        ["basic-materials", "Basic Materials"],
+        ["communication-services", "Communication Services"],
+        ["consumer-cyclical", "Consumer Cyclical"],
+        ["consumer-defensive", "Consumer Defensive"],
+        ["energy", "Energy"],
+        ["financial-services", "Financial Services"],
+        ["healthcare", "Healthcare"],
+        ["industrials", "Industrials"],
+        ["real-estate", "Real Estate"],
+        ["technology", "Technology"],
+        ["utilities", "Utilities"],
+    ]
+    return pd.DataFrame(data, columns=["key", "name"])
 
 
 @handle_errors

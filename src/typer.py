@@ -159,35 +159,16 @@ NewsTabType = Annotated[
     ),
 ]
 
-SECTOR_KEYS = [
-    "basic-materials",
-    "communication-services",
-    "consumer-cyclical",
-    "consumer-defensive",
-    "energy",
-    "financial-services",
-    "healthcare",
-    "industrials",
-    "real-estate",
-    "technology",
-    "utilities",
-]
-
 SectorKeyType = Annotated[
     str,
     typer.Argument(
-        callback=lambda x: (
-            x
-            if x in SECTOR_KEYS
-            else raise_exception(typer.BadParameter(f"Invalid sector key: {x}"))
-        ),
-        help=f"Sector key ({', '.join(SECTOR_KEYS)})",
+        help="A valid sector key, can be found using `yfin sector-keys`",
     ),
 ]
 
 IndustryKeyType = Annotated[
     str,
     typer.Argument(
-        help="Industry key",
+        help="A valid industry key, can be found using `yfin sector-industries {sector-key}`",
     ),
 ]
