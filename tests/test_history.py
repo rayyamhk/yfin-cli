@@ -1,7 +1,5 @@
 """Tests for the history command."""
 
-import pytest
-import typer
 import pandas as pd
 from typer.testing import CliRunner
 from unittest.mock import patch
@@ -27,7 +25,7 @@ def create_mock_history_data():
 class TestHistoryCommand:
     """Tests for the history CLI command."""
 
-    @patch("src.commands.history.yf.Ticker")
+    @patch("src.commands.stock.yf.Ticker")
     def test_history_basic(self, mock_ticker):
         """Test basic history command execution."""
         mock_ticker.return_value.history.return_value = create_mock_history_data()
@@ -35,7 +33,7 @@ class TestHistoryCommand:
         assert result.exit_code == 0
         assert "104.0" in result.stdout  # Close price (raw value)
 
-    @patch("src.commands.history.yf.Ticker")
+    @patch("src.commands.stock.yf.Ticker")
     def test_history_with_interval(self, mock_ticker):
         """Test history command with --interval option."""
         mock_ticker.return_value.history.return_value = create_mock_history_data()
@@ -45,7 +43,7 @@ class TestHistoryCommand:
         call_kwargs = mock_ticker.return_value.history.call_args[1]
         assert call_kwargs["interval"] == "1h"
 
-    @patch("src.commands.history.yf.Ticker")
+    @patch("src.commands.stock.yf.Ticker")
     def test_history_with_period(self, mock_ticker):
         """Test history command with --period option."""
         mock_ticker.return_value.history.return_value = create_mock_history_data()
@@ -54,7 +52,7 @@ class TestHistoryCommand:
         call_kwargs = mock_ticker.return_value.history.call_args[1]
         assert call_kwargs["period"] == "5d"
 
-    @patch("src.commands.history.yf.Ticker")
+    @patch("src.commands.stock.yf.Ticker")
     def test_history_with_start_end(self, mock_ticker):
         """Test history command with --start and --end options."""
         mock_ticker.return_value.history.return_value = create_mock_history_data()
@@ -104,7 +102,7 @@ class TestHistoryCommand:
         output = result.stdout + (result.output or "")
         assert "At most 2" in output or result.exit_code == 2
 
-    @patch("src.commands.history.yf.Ticker")
+    @patch("src.commands.stock.yf.Ticker")
     def test_history_no_data(self, mock_ticker):
         """Test history command when no data is found."""
         mock_ticker.return_value.history.return_value = pd.DataFrame()
@@ -112,14 +110,14 @@ class TestHistoryCommand:
         assert result.exit_code == 1
         assert "No data found" in result.output
 
-    @patch("src.commands.history.yf.Ticker")
+    @patch("src.commands.stock.yf.Ticker")
     def test_history_ticker_uppercase(self, mock_ticker):
         """Test that ticker is converted to uppercase."""
         mock_ticker.return_value.history.return_value = create_mock_history_data()
         runner.invoke(app, ["history", "tsla"])
         mock_ticker.assert_called_once_with("TSLA")
 
-    @patch("src.commands.history.yf.Ticker")
+    @patch("src.commands.stock.yf.Ticker")
     def test_history_api_error(self, mock_ticker):
         """Test history command handles API errors gracefully."""
         mock_ticker.return_value.history.side_effect = Exception("API Error")
@@ -127,11 +125,10 @@ class TestHistoryCommand:
         assert result.exit_code == 1
         assert "Unexpected error" in result.output
 
-    @patch("src.commands.history.yf.Ticker")
+    @patch("src.commands.stock.yf.Ticker")
     def test_history_default_period(self, mock_ticker):
         """Test that default period is 1mo when no time options specified."""
         mock_ticker.return_value.history.return_value = create_mock_history_data()
         runner.invoke(app, ["history", "TSLA"])
         call_kwargs = mock_ticker.return_value.history.call_args[1]
         assert call_kwargs["period"] == "1mo"
-

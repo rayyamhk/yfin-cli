@@ -42,7 +42,7 @@ def create_mock_cashflow_data(freq="yearly"):
 class TestCashFlowCommand:
     """Tests for the cashflow CLI command."""
 
-    @patch("src.commands.cashflow.yf.Ticker")
+    @patch("src.commands.financials.yf.Ticker")
     def test_cashflow_basic(self, mock_ticker):
         """Test basic cashflow command execution (yearly)."""
         mock_instance = MagicMock()
@@ -60,7 +60,7 @@ class TestCashFlowCommand:
         # Verify call args
         mock_instance.get_cashflow.assert_called_with(pretty=True, freq="yearly")
 
-    @patch("src.commands.cashflow.yf.Ticker")
+    @patch("src.commands.financials.yf.Ticker")
     def test_cashflow_quarterly(self, mock_ticker):
         """Test cashflow command with --frequency quarterly."""
         mock_instance = MagicMock()
@@ -77,7 +77,7 @@ class TestCashFlowCommand:
         # Verify call args
         mock_instance.get_cashflow.assert_called_with(pretty=True, freq="quarterly")
 
-    @patch("src.commands.cashflow.yf.Ticker")
+    @patch("src.commands.financials.yf.Ticker")
     def test_cashflow_trailing(self, mock_ticker):
         """Test cashflow command with --frequency trailing."""
         mock_instance = MagicMock()
@@ -93,7 +93,7 @@ class TestCashFlowCommand:
         # Verify call args
         mock_instance.get_cashflow.assert_called_with(pretty=True, freq="trailing")
 
-    @patch("src.commands.cashflow.yf.Ticker")
+    @patch("src.commands.financials.yf.Ticker")
     def test_cashflow_no_data(self, mock_ticker):
         """Test cashflow command when no data is found."""
         mock_instance = MagicMock()
@@ -106,7 +106,7 @@ class TestCashFlowCommand:
         assert result.exit_code == 1
         assert "No data found" in result.output
 
-    @patch("src.commands.cashflow.yf.Ticker")
+    @patch("src.commands.financials.yf.Ticker")
     def test_cashflow_api_error(self, mock_ticker):
         """Test cashflow command handles API errors."""
         mock_instance = MagicMock()

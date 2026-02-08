@@ -27,7 +27,7 @@ def create_mock_earnings_dates_data():
 class TestEarningsDatesCommand:
     """Tests for the earnings-dates CLI command."""
 
-    @patch("src.commands.earnings_dates.yf.Ticker")
+    @patch("src.commands.financials.yf.Ticker")
     def test_earnings_dates_basic(self, mock_ticker):
         """Test basic earnings-dates command execution."""
         mock_instance = MagicMock()
@@ -46,7 +46,7 @@ class TestEarningsDatesCommand:
         # Verify call args
         mock_instance.get_earnings_dates.assert_called_once()
 
-    @patch("src.commands.earnings_dates.yf.Ticker")
+    @patch("src.commands.financials.yf.Ticker")
     def test_earnings_dates_no_data(self, mock_ticker):
         """Test earnings-dates command when no data is found."""
         mock_instance = MagicMock()
@@ -59,7 +59,7 @@ class TestEarningsDatesCommand:
         assert result.exit_code == 1
         assert "No data found" in result.output
 
-    @patch("src.commands.earnings_dates.yf.Ticker")
+    @patch("src.commands.financials.yf.Ticker")
     def test_earnings_dates_none_data(self, mock_ticker):
         """Test earnings-dates command when data is None."""
         mock_instance = MagicMock()
@@ -71,7 +71,7 @@ class TestEarningsDatesCommand:
         assert result.exit_code == 1
         assert "Unexpected error" in result.output
 
-    @patch("src.commands.earnings_dates.yf.Ticker")
+    @patch("src.commands.financials.yf.Ticker")
     def test_earnings_dates_api_error(self, mock_ticker):
         """Test earnings-dates command handles API errors."""
         mock_instance = MagicMock()

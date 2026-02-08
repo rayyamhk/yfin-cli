@@ -1,7 +1,7 @@
 """Tests for the fast_info command."""
 
 from typer.testing import CliRunner
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from src.cli import app
 
 runner = CliRunner()
@@ -34,7 +34,7 @@ MOCK_FAST_INFO = {
 class TestFastInfoCommand:
     """Tests for the fast-info CLI command."""
 
-    @patch("src.commands.fast_info.yf.Ticker")
+    @patch("src.commands.stock.yf.Ticker")
     def test_fast_info_basic(self, mock_ticker):
         """Test basic fast-info command execution."""
         mock_ticker.return_value.get_fast_info.return_value = MOCK_FAST_INFO
@@ -42,7 +42,7 @@ class TestFastInfoCommand:
         assert result.exit_code == 0
         assert "lastPrice" in result.output
 
-    @patch("src.commands.fast_info.yf.Ticker")
+    @patch("src.commands.stock.yf.Ticker")
     def test_fast_info_displays_metrics(self, mock_ticker):
         """Test that fast-info displays expected metrics."""
         mock_ticker.return_value.get_fast_info.return_value = MOCK_FAST_INFO
@@ -52,7 +52,7 @@ class TestFastInfoCommand:
         assert "yearHigh" in result.output
         assert "exchange" in result.output
 
-    @patch("src.commands.fast_info.yf.Ticker")
+    @patch("src.commands.stock.yf.Ticker")
     def test_fast_info_no_data(self, mock_ticker):
         """Test fast-info command when no data is found."""
         mock_ticker.return_value.get_fast_info.return_value = None
@@ -60,14 +60,14 @@ class TestFastInfoCommand:
         assert result.exit_code == 1
         assert "Unexpected error" in result.output
 
-    @patch("src.commands.fast_info.yf.Ticker")
+    @patch("src.commands.stock.yf.Ticker")
     def test_fast_info_ticker_uppercase(self, mock_ticker):
         """Test that ticker is converted to uppercase."""
         mock_ticker.return_value.get_fast_info.return_value = MOCK_FAST_INFO
         runner.invoke(app, ["fast-info", "tsla"])
         mock_ticker.assert_called_once_with("TSLA")
 
-    @patch("src.commands.fast_info.yf.Ticker")
+    @patch("src.commands.stock.yf.Ticker")
     def test_fast_info_api_error(self, mock_ticker):
         """Test fast-info command handles API errors gracefully."""
         mock_ticker.return_value.get_fast_info.side_effect = Exception("API Error")

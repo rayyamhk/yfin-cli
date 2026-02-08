@@ -1,14 +1,7 @@
 import typer
 from datetime import datetime
 from typing import Annotated
-from .validator import (
-    validate_date_string,
-    validate_output_type,
-    validate_frequency,
-    validate_extended_frequency,
-    validate_interval,
-    validate_news_tab,
-)
+from .validator import validate_date_string
 from .formatter import format_datetime
 from .utils import increment_datetime_by_days
 
@@ -19,28 +12,49 @@ TickerType = Annotated[
     ),
 ]
 
-default_output = "table"
+default_output = "raw"
+
+VALID_OUTPUT_TYPES = ["raw", "table"]
 
 OutputType = Annotated[
     str,
-    typer.Option(callback=validate_output_type, help="Output format (table)"),
+    typer.Option(
+        callback=lambda x: (
+            x
+            if x in VALID_OUTPUT_TYPES
+            else throw(typer.BadParameter(f"Invalid output type: {x}"))
+        ),
+        help=f"Output format ({', '.join(VALID_OUTPUT_TYPES)})",
+    ),
 ]
 
 default_frequency = "yearly"
 
+VALID_FREQUENCIES = ["yearly", "quarterly"]
+
 FrequencyType = Annotated[
     str,
     typer.Option(
-        callback=validate_frequency,
-        help="Frequency of the data (yearly or quarterly)",
+        callback=lambda x: (
+            x
+            if x in VALID_FREQUENCIES
+            else throw(typer.BadParameter(f"Invalid frequency: {x}"))
+        ),
+        help=f"Frequency of the data ({', '.join(VALID_FREQUENCIES)})",
     ),
 ]
+
+VALID_EXTENDED_FREQUENCIES = ["yearly", "quarterly", "trailing"]
 
 ExtendedFrequencyType = Annotated[
     str,
     typer.Option(
-        callback=validate_extended_frequency,
-        help="Frequency of the data (yearly, quarterly or trailing)",
+        callback=lambda x: (
+            x
+            if x in VALID_EXTENDED_FREQUENCIES
+            else throw(typer.BadParameter(f"Invalid frequency: {x}"))
+        ),
+        help=f"Frequency of the data ({', '.join(VALID_EXTENDED_FREQUENCIES)})",
     ),
 ]
 
@@ -97,11 +111,31 @@ MarketCapType = Annotated[
 
 default_interval = "1d"
 
+VALID_INTERVALS = [
+    "1m",
+    "2m",
+    "5m",
+    "15m",
+    "30m",
+    "60m",
+    "90m",
+    "1h",
+    "1d",
+    "5d",
+    "1wk",
+    "1mo",
+    "3mo",
+]
+
 IntervalType = Annotated[
     str,
     typer.Option(
-        callback=validate_interval,
-        help="Data interval (1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo)",
+        callback=lambda x: (
+            x
+            if x in VALID_INTERVALS
+            else throw(typer.BadParameter(f"Invalid interval: {x}"))
+        ),
+        help=f"Data interval ({', '.join(VALID_INTERVALS)})",
     ),
 ]
 
@@ -116,10 +150,48 @@ CountType = Annotated[
 
 default_news_tab = "all"
 
+VALID_NEWS_TABS = ["all", "news", "press releases"]
+
 NewsTabType = Annotated[
     str,
     typer.Option(
-        callback=validate_news_tab,
-        help="Tab of the news (all, news, press releases)",
+        callback=lambda x: (
+            x
+            if x in VALID_NEWS_TABS
+            else throw(typer.BadParameter(f"Invalid news tab: {x}"))
+        ),
+        help=f"Tab of the news ({', '.join(VALID_NEWS_TABS)})",
     ),
 ]
+
+
+SECTOR_KEYS = [
+    "basic-materials",
+    "communication-services",
+    "consumer-cyclical",
+    "consumer-defensive",
+    "energy",
+    "financial-services",
+    "healthcare",
+    "industrials",
+    "real-estate",
+    "technology",
+    "utilities",
+]
+
+
+SectorKeyType = Annotated[
+    str,
+    typer.Argument(
+        callback=lambda x: (
+            x
+            if x in SECTOR_KEYS
+            else throw(typer.BadParameter(f"Invalid sector key: {x}"))
+        ),
+        help=f"Sector key ({', '.join(SECTOR_KEYS)})",
+    ),
+]
+
+
+def throw(ex: Exception):
+    raise ex

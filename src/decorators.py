@@ -1,8 +1,8 @@
 import typer
 from functools import wraps
+from pandas import DataFrame, Series
 from .writer import WriterFactory
-from .validator import validate_data_frame_has_data
-from .utils import print_error
+from .utils import print_error, print_warning
 
 
 def handle_errors(func):
@@ -26,10 +26,31 @@ def with_output(func):
 
     @wraps(func)
     def wrapper(*args, **kwargs):
-        data_frame = func(*args, **kwargs)
-        validate_data_frame_has_data(data_frame)
+        data = func(*args, **kwargs)
         output_type = kwargs.get("output")
         writer = WriterFactory.get_writer(output_type)
-        writer.write_dataframe(data_frame)
+
+        has_data = True
+        if isinstance(data, (DataFrame, Series)):
+            if data.empty:
+                has_data = False
+            else:
+                writer.write_dataframe(data)
+        elif isinstance(data, list):
+            if not data:
+                has_data = False
+            else:
+                writer.write_list(data)
+        elif isinstance(data, dict):
+            if not data:
+                has_data = False
+            else:
+                writer.write_dict(data)
+        else:
+            raise ValueError(f"Unsupported data type: {type(data)}")
+
+        if not has_data:
+            print_warning("No data found")
+            raise typer.Exit(code=1)
 
     return wrapper

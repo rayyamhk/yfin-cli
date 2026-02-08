@@ -3,7 +3,6 @@
 import pandas as pd
 from typer.testing import CliRunner
 from unittest.mock import patch
-from datetime import datetime
 from src.cli import app
 
 runner = CliRunner()
@@ -33,7 +32,7 @@ def create_mock_ipo_data():
 class TestIPOCommand:
     """Tests for the ipo CLI command."""
 
-    @patch("src.commands.calendar_ipo.yf.Calendars")
+    @patch("src.commands.calendar.yf.Calendars")
     def test_ipo_basic(self, mock_calendars):
         """Test basic calendar_ipo command execution."""
         mock_calendars.return_value.get_ipo_info_calendar.return_value = (
@@ -44,7 +43,7 @@ class TestIPOCommand:
         assert "Tech" in result.output
         assert "TIPO" in result.output
 
-    @patch("src.commands.calendar_ipo.yf.Calendars")
+    @patch("src.commands.calendar.yf.Calendars")
     def test_ipo_with_options(self, mock_calendars):
         """Test calendar_ipo command with options."""
         mock_calendars.return_value.get_ipo_info_calendar.return_value = (
@@ -59,7 +58,7 @@ class TestIPOCommand:
         assert call_kwargs["limit"] == 5
         assert call_kwargs["start"] == "2026-02-01"
 
-    @patch("src.commands.calendar_ipo.yf.Calendars")
+    @patch("src.commands.calendar.yf.Calendars")
     def test_ipo_no_data(self, mock_calendars):
         """Test calendar_ipo command when no data is found."""
         mock_calendars.return_value.get_ipo_info_calendar.return_value = pd.DataFrame()
@@ -74,7 +73,7 @@ class TestIPOCommand:
         assert result.exit_code == 2
         assert "Invalid date format" in result.output
 
-    @patch("src.commands.calendar_ipo.yf.Calendars")
+    @patch("src.commands.calendar.yf.Calendars")
     def test_ipo_api_error(self, mock_calendars):
         """Test calendar_ipo command handles API errors gracefully."""
         mock_calendars.return_value.get_ipo_info_calendar.side_effect = Exception(

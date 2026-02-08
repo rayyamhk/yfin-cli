@@ -3,7 +3,6 @@
 import pandas as pd
 from typer.testing import CliRunner
 from unittest.mock import patch
-from datetime import datetime
 from src.cli import app
 
 runner = CliRunner()
@@ -32,7 +31,7 @@ def create_mock_earnings_data():
 class TestEarningsCommand:
     """Tests for the calendar-earnings CLI command."""
 
-    @patch("src.commands.calendar_earnings.yf.Calendars")
+    @patch("src.commands.calendar.yf.Calendars")
     def test_earnings_basic(self, mock_calendars):
         """Test basic calendar-earnings command execution."""
         mock_calendars.return_value.get_earnings_calendar.return_value = (
@@ -44,7 +43,7 @@ class TestEarningsCommand:
         assert "Test" in result.stdout
         assert "TEST" in result.stdout
 
-    @patch("src.commands.calendar_earnings.yf.Calendars")
+    @patch("src.commands.calendar.yf.Calendars")
     def test_earnings_with_options(self, mock_calendars):
         """Test calendar-earnings command with options."""
         mock_calendars.return_value.get_earnings_calendar.return_value = (
@@ -59,7 +58,7 @@ class TestEarningsCommand:
         assert call_kwargs["limit"] == 5
         assert call_kwargs["start"] == "2026-02-01"
 
-    @patch("src.commands.calendar_earnings.yf.Calendars")
+    @patch("src.commands.calendar.yf.Calendars")
     def test_earnings_no_data(self, mock_calendars):
         """Test calendar-earnings command when no data is found."""
         mock_calendars.return_value.get_earnings_calendar.return_value = pd.DataFrame()
@@ -75,7 +74,7 @@ class TestEarningsCommand:
         assert result.exit_code == 2
         assert "Invalid date format" in result.output
 
-    @patch("src.commands.calendar_earnings.yf.Calendars")
+    @patch("src.commands.calendar.yf.Calendars")
     def test_earnings_api_error(self, mock_calendars):
         """Test calendar-earnings command handles API errors gracefully."""
         mock_calendars.return_value.get_earnings_calendar.side_effect = Exception(

@@ -35,7 +35,7 @@ def create_mock_income_statement_data(freq="yearly"):
 class TestIncomeStatementCommand:
     """Tests for the income-statement CLI command."""
 
-    @patch("src.commands.income_statement.yf.Ticker")
+    @patch("src.commands.financials.yf.Ticker")
     def test_income_statement_basic(self, mock_ticker):
         """Test basic income-statement command execution (yearly)."""
         mock_instance = MagicMock()
@@ -44,7 +44,7 @@ class TestIncomeStatementCommand:
             freq="yearly"
         )
 
-        result = runner.invoke(app, ["income-statement", "AAPL"])
+        result = runner.invoke(app, ["income_stmt", "AAPL"])
 
         assert result.exit_code == 0
         assert "TotalRevenue" in result.output
@@ -53,7 +53,7 @@ class TestIncomeStatementCommand:
         # Verify call args
         mock_instance.get_income_stmt.assert_called_with(pretty=True, freq="yearly")
 
-    @patch("src.commands.income_statement.yf.Ticker")
+    @patch("src.commands.financials.yf.Ticker")
     def test_income_statement_quarterly(self, mock_ticker):
         """Test income-statement command with --quarterly option."""
         mock_instance = MagicMock()
@@ -63,7 +63,7 @@ class TestIncomeStatementCommand:
         )
 
         result = runner.invoke(
-            app, ["income-statement", "AAPL", "--frequency", "quarterly"]
+            app, ["income_stmt", "AAPL", "--frequency", "quarterly"]
         )
 
         assert result.exit_code == 0
@@ -72,27 +72,27 @@ class TestIncomeStatementCommand:
         # Verify call args
         mock_instance.get_income_stmt.assert_called_with(pretty=True, freq="quarterly")
 
-    @patch("src.commands.income_statement.yf.Ticker")
+    @patch("src.commands.financials.yf.Ticker")
     def test_income_statement_no_data(self, mock_ticker):
         """Test income-statement command when no data is found."""
         mock_instance = MagicMock()
         mock_ticker.return_value = mock_instance
         mock_instance.get_income_stmt.return_value = pd.DataFrame()
 
-        result = runner.invoke(app, ["income-statement", "AAPL"])
+        result = runner.invoke(app, ["income_stmt", "AAPL"])
 
         # Typer exit code 1 raised explicitly
         assert result.exit_code == 1
         assert "No data found" in result.output
 
-    @patch("src.commands.income_statement.yf.Ticker")
+    @patch("src.commands.financials.yf.Ticker")
     def test_income_statement_api_error(self, mock_ticker):
         """Test income-statement command handles API errors."""
         mock_instance = MagicMock()
         mock_ticker.return_value = mock_instance
         mock_instance.get_income_stmt.side_effect = Exception("API Error")
 
-        result = runner.invoke(app, ["income-statement", "AAPL"])
+        result = runner.invoke(app, ["income_stmt", "AAPL"])
 
         assert result.exit_code == 1
         assert "Unexpected error" in result.output

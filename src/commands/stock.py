@@ -5,6 +5,10 @@ from ..typer import (
     TickerType,
     IntervalType,
     default_interval,
+    NewsTabType,
+    default_news_tab,
+    CountType,
+    default_count,
     OutputType,
     default_output,
 )
@@ -66,3 +70,69 @@ def history(
     stock = yf.Ticker(ticker)
     data_frame = stock.history(**kwargs)
     return data_frame
+
+
+@handle_errors
+@with_output
+def dividends(
+    ticker: TickerType,
+    period: Annotated[
+        str,
+        typer.Option(
+            callback=validate_period,
+            help="Data period (1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max)",
+        ),
+    ] = "max",
+    output: OutputType = default_output,
+):
+    """
+    Get dividends for a stock ticker.
+    """
+    stock = yf.Ticker(ticker)
+    data_frame = stock.get_dividends(period=period)
+    return data_frame
+
+
+@handle_errors
+@with_output
+def fast_info(
+    ticker: TickerType,
+    output: OutputType = default_output,
+):
+    """
+    Get fast info summary for a stock ticker.
+
+    Returns key metrics like price, market cap, volume, and 52-week range.
+    """
+    stock = yf.Ticker(ticker)
+    fast_info_dict = dict(stock.get_fast_info())  # fast_info is a dict-like object
+    return fast_info_dict
+
+
+@handle_errors
+@with_output
+def news(
+    ticker: TickerType,
+    count: CountType = default_count,
+    tab: NewsTabType = default_news_tab,
+    output: OutputType = default_output,
+):
+    """
+    Get news for a stock ticker.
+    """
+    stock = yf.Ticker(ticker)
+    news_list = stock.get_news(count, tab)
+    processed_news_list = []
+    for article in news_list:
+        content = article.get("content") or {}
+        processed_news_list.append(
+            {
+                "Date": content.get("pubDate"),
+                "Title": content.get("title"),
+                "Summary": content.get("summary"),
+                "URL": (content.get("canonicalUrl") or {}).get("url"),
+                "Source": (content.get("provider") or {}).get("displayName"),
+            }
+        )
+
+    return processed_news_list

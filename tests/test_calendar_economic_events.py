@@ -3,7 +3,6 @@
 import pandas as pd
 from typer.testing import CliRunner
 from unittest.mock import patch
-from datetime import datetime
 from src.cli import app
 
 runner = CliRunner()
@@ -31,7 +30,7 @@ def create_mock_economic_data():
 class TestEconomicEventsCommand:
     """Tests for the calendar-economic-events CLI command."""
 
-    @patch("src.commands.calendar_economic_events.yf.Calendars")
+    @patch("src.commands.calendar.yf.Calendars")
     def test_economic_events_basic(self, mock_calendars):
         """Test basic calendar-economic-events command execution."""
         mock_calendars.return_value.get_economic_events_calendar.return_value = (
@@ -42,7 +41,7 @@ class TestEconomicEventsCommand:
         assert "CPI YoY" in result.output
         assert "US" in result.output
 
-    @patch("src.commands.calendar_economic_events.yf.Calendars")
+    @patch("src.commands.calendar.yf.Calendars")
     def test_economic_events_with_options(self, mock_calendars):
         """Test calendar-economic-events command with options."""
         mock_calendars.return_value.get_economic_events_calendar.return_value = (
@@ -59,7 +58,7 @@ class TestEconomicEventsCommand:
         assert call_kwargs["limit"] == 5
         assert call_kwargs["start"] == "2026-02-01"
 
-    @patch("src.commands.calendar_economic_events.yf.Calendars")
+    @patch("src.commands.calendar.yf.Calendars")
     def test_economic_events_no_data(self, mock_calendars):
         """Test calendar-economic-events command when no data is found."""
         mock_calendars.return_value.get_economic_events_calendar.return_value = (
@@ -78,7 +77,7 @@ class TestEconomicEventsCommand:
         assert result.exit_code == 2
         assert "Invalid date format" in result.output
 
-    @patch("src.commands.calendar_economic_events.yf.Calendars")
+    @patch("src.commands.calendar.yf.Calendars")
     def test_economic_events_api_error(self, mock_calendars):
         """Test calendar-economic-events command handles API errors gracefully."""
         mock_calendars.return_value.get_economic_events_calendar.side_effect = (

@@ -35,7 +35,7 @@ def create_mock_balance_sheet_data(freq="yearly"):
 class TestBalanceSheetCommand:
     """Tests for the balance-sheet CLI command."""
 
-    @patch("src.commands.balance_sheet.yf.Ticker")
+    @patch("src.commands.financials.yf.Ticker")
     def test_balance_sheet_basic(self, mock_ticker):
         """Test basic balance-sheet command execution (yearly)."""
         mock_instance = MagicMock()
@@ -53,7 +53,7 @@ class TestBalanceSheetCommand:
         # Verify call args
         mock_instance.get_balance_sheet.assert_called_with(pretty=True, freq="yearly")
 
-    @patch("src.commands.balance_sheet.yf.Ticker")
+    @patch("src.commands.financials.yf.Ticker")
     def test_balance_sheet_quarterly(self, mock_ticker):
         """Test balance-sheet command with --frequency quarterly."""
         mock_instance = MagicMock()
@@ -75,7 +75,7 @@ class TestBalanceSheetCommand:
             pretty=True, freq="quarterly"
         )
 
-    @patch("src.commands.balance_sheet.yf.Ticker")
+    @patch("src.commands.financials.yf.Ticker")
     def test_balance_sheet_no_data(self, mock_ticker):
         """Test balance-sheet command when no data is found."""
         mock_instance = MagicMock()
@@ -88,7 +88,7 @@ class TestBalanceSheetCommand:
         assert result.exit_code == 1
         assert "No data found" in result.output
 
-    @patch("src.commands.balance_sheet.yf.Ticker")
+    @patch("src.commands.financials.yf.Ticker")
     def test_balance_sheet_api_error(self, mock_ticker):
         """Test balance-sheet command handles API errors."""
         mock_instance = MagicMock()
