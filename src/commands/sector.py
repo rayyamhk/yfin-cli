@@ -16,7 +16,7 @@ def sector_industries(key: SectorKeyType):
 @with_output
 def sector_overview(key: SectorKeyType):
     """
-    Retrieves the overview information of the domain entity.
+    Get the overview information of the domain entity.
     """
     return yf.Sector(key).overview
 
@@ -25,7 +25,7 @@ def sector_overview(key: SectorKeyType):
 @with_output
 def sector_research_reports(key: SectorKeyType):
     """
-    Retrieves research reports related to the domain entity.
+    Get research reports related to the domain entity.
     """
     return yf.Sector(key).research_reports
 
@@ -34,7 +34,7 @@ def sector_research_reports(key: SectorKeyType):
 @with_output
 def sector_top_companies(key: SectorKeyType):
     """
-    Retrieves the top companies within the domain entity.
+    Get the top companies within the domain entity.
     """
     return yf.Sector(key).top_companies
 
@@ -43,7 +43,7 @@ def sector_top_companies(key: SectorKeyType):
 @with_output
 def sector_top_etfs(key: SectorKeyType):
     """
-    Gets the top ETFs for the sector.
+    Get the top ETFs for the sector.
     """
     return yf.Sector(key).top_etfs
 
@@ -52,6 +52,6 @@ def sector_top_etfs(key: SectorKeyType):
 @with_output
 def sector_top_mutual_funds(key: SectorKeyType):
     """
-    Gets the top mutual funds for the sector.
+    Get the top mutual funds for the sector.
     """
     return yf.Sector(key).top_mutual_funds

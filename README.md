@@ -1,28 +1,49 @@
 # yfin-cli
 
-A CLI wrapper for [yfinance](https://github.com/ranaroussi/yfinance).
+A command-line interface for [Yahoo Finance](https://finance.yahoo.com/) data, powered by [yfinance](https://github.com/ranaroussi/yfinance).
 
 ## Features
 
-- **Historical Data**: Get historical stock data with various intervals.
-- **News**: Fetch latest news for a ticker.
-- **Fast Info**: Quick summary of key stock metrics.
-- **Calendars**:
-  - Earnings Calendar (`yfin calendar-earnings`)
-  - IPO Calendar (`yfin calendar-ipo`)
-  - Economic Events (`yfin calendar-economic-events`)
-- **Financial Statements**:
-  - Income Statement (`yfin income-statement`)
-  - Balance Sheet (`yfin balance-sheet`)
-  - Cash Flow (`yfin cashflow`)
-- **Earnings Dates**: Detailed earnings history and estimates (`yfin earnings-dates`).
+### Stock Data
+- **Historical Data** - OHLCV data with customizable intervals and date ranges
+- **Dividends** - Dividend history for any stock
+- **Fast Info** - Quick summary of key metrics (price, market cap, 52-week range)
+- **News** - Latest news articles for a ticker
+
+### Financial Statements
+- **Income Statement** (`income-stmt`) - Revenue, expenses, net income
+- **Balance Sheet** (`balance-sheet`) - Assets, liabilities, equity
+- **Cash Flow** (`cashflow`) - Operating, investing, financing activities
+- **Earnings Dates** (`earnings-dates`) - Past and upcoming earnings with EPS estimates
+
+### Analyst Data
+- **Recommendations** - Buy/sell/hold ratings summary
+- **Upgrades/Downgrades** - Analyst rating changes history
+- **Price Targets** - Analyst price target estimates
+- **Earnings/Revenue Estimates** - Forward-looking estimates
+- **EPS Trend & Revisions** - Earnings per share analysis
+- **Growth Estimates** - Projected growth rates
+
+### Insider & Institutional
+- **Insider Purchases/Transactions** - Insider trading activity
+- **Major Holders** - Top shareholders
+- **Institutional Holders** - Institutional ownership
+- **Mutual Fund Holders** - Mutual fund ownership
+
+### Calendar Events
+- **Earnings Calendar** (`calendar-earnings`) - Upcoming earnings releases
+- **IPO Calendar** (`calendar-ipo`) - Upcoming IPOs
+- **Economic Events** (`calendar-economic-events`) - Economic indicators and releases
+
+### Sector & Industry Analysis
+- **Sector Commands** - Industries, overview, top companies, ETFs, mutual funds
+- **Industry Commands** - Overview, top companies, growth companies, top performers
 
 ## Installation
 
 ### Using uv (Recommended)
 
 ```bash
-# Install directly from source
 uv tool install .
 ```
 
@@ -38,44 +59,88 @@ pip install .
 yfin [OPTIONS] COMMAND [ARGS]...
 ```
 
+### Global Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--output` | Output format (`raw` or `table`) | `raw` |
+| `--help` | Show help message | - |
+
 ### Examples
 
-**Get Historical Data:**
+**Get historical data:**
 ```bash
-yfin history AAPL --period 1y --interval 1d
+yfin history AAPL --period 1mo --interval 1d
 ```
 
-**View Income Statement:**
+**View income statement (quarterly):**
 ```bash
-yfin income-statement MSFT --quarterly
+yfin income-stmt MSFT --frequency quarterly
 ```
 
-**Check Earnings Dates:**
+**Get analyst recommendations:**
 ```bash
-yfin earnings-dates TSLA
+yfin recommendations NVDA
 ```
 
-**View Cash Flow (Trailing 12 Months):**
+**Check insider transactions:**
 ```bash
-yfin cashflow NVDA --frequency trailing
+yfin insider-transactions TSLA
 ```
 
-**Get Recent News:**
+**View sector top companies (table format):**
 ```bash
-yfin news GOOGL --limit 5
+yfin --output table sector-top-companies technology
 ```
+
+**Get industry top performers:**
+```bash
+yfin industry-top-performing-companies aluminum
+```
+
+**View earnings calendar:**
+```bash
+yfin calendar-earnings --start 2026-02-01 --end 2026-02-28
+```
+
+**Get recent news:**
+```bash
+yfin news GOOGL --count 10
+```
+
+## Available Commands
+
+| Category | Commands |
+|----------|----------|
+| **Stock** | `history`, `dividends`, `fast-info`, `news` |
+| **Financials** | `income-stmt`, `balance-sheet`, `cashflow`, `earnings-dates` |
+| **Analysis** | `recommendations`, `upgrades-downgrades`, `price-targets`, `earnings-estimate`, `revenue-estimate`, `earnings-history`, `eps-trend`, `eps-revisions`, `growth-estimates` |
+| **Holders** | `insider-purchases`, `insider-transactions`, `insider-roster-holders`, `major-holders`, `institutional-holders`, `mutualfund-holders` |
+| **Calendar** | `calendar-earnings`, `calendar-ipo`, `calendar-economic-events` |
+| **Sector** | `sector-industries`, `sector-overview`, `sector-research-reports`, `sector-top-companies`, `sector-top-etfs`, `sector-top-mutual-funds` |
+| **Industry** | `industry-overview`, `industry-research-reports`, `industry-top-companies`, `industry-top-growth-companies`, `industry-top-performing-companies` |
 
 ## Development
 
-This project involves `uv` for dependency management.
+This project uses [uv](https://docs.astral.sh/uv/) for dependency management.
 
 ```bash
 # Install dependencies
 uv sync
 
+# Run the CLI
+uv run yfin --help
+
 # Run tests
 uv run pytest
+
+# Format code
+uv run ruff format .
 
 # Build package
 uv build
 ```
+
+## License
+
+MIT

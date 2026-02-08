@@ -30,7 +30,6 @@ def with_output(func):
         data = func(*args, **kwargs)
         ctx = click.get_current_context()
         output_type = ctx.obj.get("output")
-        print(output_type)
         writer = WriterFactory.get_writer(output_type)
 
         has_data = True
