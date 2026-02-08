@@ -32,6 +32,13 @@ from .commands.financials import (
     cashflow,
     earnings_dates,
 )
+from .commands.industry import (
+    industry_overview,
+    industry_research_reports,
+    industry_top_companies,
+    industry_top_growth_companies,
+    industry_top_performing_companies,
+)
 from .commands.sector import (
     sector_industries,
     sector_overview,
@@ -90,6 +97,12 @@ app.command(name="sector-research-reports")(sector_research_reports)
 app.command(name="sector-top-companies")(sector_top_companies)
 app.command(name="sector-top-etfs")(sector_top_etfs)
 app.command(name="sector-top-mutual-funds")(sector_top_mutual_funds)
+
+app.command(name="industry-overview")(industry_overview)
+app.command(name="industry-research-reports")(industry_research_reports)
+app.command(name="industry-top-companies")(industry_top_companies)
+app.command(name="industry-top-growth-companies")(industry_top_growth_companies)
+app.command(name="industry-top-performing-companies")(industry_top_performing_companies)
 
 if __name__ == "__main__":
     app()

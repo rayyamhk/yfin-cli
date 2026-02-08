@@ -2,8 +2,7 @@ import typer
 from datetime import datetime
 from typing import Annotated
 from .validator import validate_date_string
-from .formatter import format_datetime
-from .utils import increment_datetime_by_days
+from .utils import increment_datetime_by_days, format_datetime
 
 TickerType = Annotated[
     str,
@@ -12,9 +11,9 @@ TickerType = Annotated[
     ),
 ]
 
-default_output = "raw"
-
 VALID_OUTPUT_TYPES = ["raw", "table"]
+
+default_output = VALID_OUTPUT_TYPES[0]
 
 OutputType = Annotated[
     str,
@@ -28,9 +27,9 @@ OutputType = Annotated[
     ),
 ]
 
-default_frequency = "yearly"
-
 VALID_FREQUENCIES = ["yearly", "quarterly"]
+
+default_frequency = VALID_FREQUENCIES[0]
 
 FrequencyType = Annotated[
     str,
@@ -58,7 +57,6 @@ ExtendedFrequencyType = Annotated[
     ),
 ]
 
-
 StartDateType = Annotated[
     str,
     typer.Option(
@@ -67,7 +65,6 @@ StartDateType = Annotated[
         help="Start date (YYYY-MM-DD), default today",
     ),
 ]
-
 
 EndDateType = Annotated[
     str,
@@ -82,14 +79,12 @@ EndDateType = Annotated[
 
 default_limit = 12
 
-
 LimitType = Annotated[
     int,
     typer.Option(
         help="Maximum number of results to show",
     ),
 ]
-
 
 default_offset = 0
 
@@ -148,9 +143,9 @@ CountType = Annotated[
     ),
 ]
 
-default_news_tab = "all"
-
 VALID_NEWS_TABS = ["all", "news", "press releases"]
+
+default_news_tab = VALID_NEWS_TABS[0]
 
 NewsTabType = Annotated[
     str,
@@ -163,7 +158,6 @@ NewsTabType = Annotated[
         help=f"Tab of the news ({', '.join(VALID_NEWS_TABS)})",
     ),
 ]
-
 
 SECTOR_KEYS = [
     "basic-materials",
@@ -179,7 +173,6 @@ SECTOR_KEYS = [
     "utilities",
 ]
 
-
 SectorKeyType = Annotated[
     str,
     typer.Argument(
@@ -189,6 +182,13 @@ SectorKeyType = Annotated[
             else throw(typer.BadParameter(f"Invalid sector key: {x}"))
         ),
         help=f"Sector key ({', '.join(SECTOR_KEYS)})",
+    ),
+]
+
+IndustryKeyType = Annotated[
+    str,
+    typer.Argument(
+        help="Industry key",
     ),
 ]
 

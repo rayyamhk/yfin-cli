@@ -12,7 +12,7 @@ from ..typer import (
     OutputType,
     default_output,
 )
-from ..validator import validate_period, validate_date_string
+from ..validator import validate_period, VALID_PERIODS, validate_date_string
 from ..decorators import handle_errors, with_output
 from ..utils import count_specified
 
@@ -26,7 +26,7 @@ def history(
         str | None,
         typer.Option(
             callback=lambda x: validate_period(x) if x else None,
-            help="Data period (1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max)",
+            help=f"Data period {', '.join(VALID_PERIODS)}",
         ),
     ] = None,
     start: Annotated[
@@ -80,7 +80,7 @@ def dividends(
         str,
         typer.Option(
             callback=validate_period,
-            help="Data period (1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max)",
+            help=f"Data period {', '.join(VALID_PERIODS)}",
         ),
     ] = "max",
     output: OutputType = default_output,

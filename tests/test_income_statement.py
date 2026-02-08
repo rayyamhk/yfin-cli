@@ -62,9 +62,7 @@ class TestIncomeStatementCommand:
             freq="quarterly"
         )
 
-        result = runner.invoke(
-            app, ["income_stmt", "AAPL", "--frequency", "quarterly"]
-        )
+        result = runner.invoke(app, ["income_stmt", "AAPL", "--frequency", "quarterly"])
 
         assert result.exit_code == 0
         assert "2025-12-31" in result.output

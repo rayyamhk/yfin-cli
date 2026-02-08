@@ -22,5 +22,9 @@ def count_specified(*args: str | None) -> int:
     return sum(x is not None for x in args)
 
 
+def format_datetime(val: datetime):
+    return val.strftime("%Y-%m-%d")
+
+
 def increment_datetime_by_days(date: datetime, delta: int) -> datetime:
     return date + timedelta(days=delta)
