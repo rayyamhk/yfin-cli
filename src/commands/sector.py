@@ -1,18 +1,11 @@
 import yfinance as yf
-from ..typer import (
-    SectorKeyType,
-    OutputType,
-    default_output,
-)
+from ..typer import SectorKeyType
 from ..decorators import handle_errors, with_output
 
 
 @handle_errors
 @with_output
-def sector_industries(
-    key: SectorKeyType,
-    output: OutputType = default_output,
-):
+def sector_industries(key: SectorKeyType):
     """
     Get the industries within a sector.
     """
@@ -21,10 +14,7 @@ def sector_industries(
 
 @handle_errors
 @with_output
-def sector_overview(
-    key: SectorKeyType,
-    output: OutputType = default_output,
-):
+def sector_overview(key: SectorKeyType):
     """
     Retrieves the overview information of the domain entity.
     """
@@ -33,10 +23,7 @@ def sector_overview(
 
 @handle_errors
 @with_output
-def sector_research_reports(
-    key: SectorKeyType,
-    output: OutputType = default_output,
-):
+def sector_research_reports(key: SectorKeyType):
     """
     Retrieves research reports related to the domain entity.
     """
@@ -45,10 +32,7 @@ def sector_research_reports(
 
 @handle_errors
 @with_output
-def sector_top_companies(
-    key: SectorKeyType,
-    output: OutputType = default_output,
-):
+def sector_top_companies(key: SectorKeyType):
     """
     Retrieves the top companies within the domain entity.
     """
@@ -57,10 +41,7 @@ def sector_top_companies(
 
 @handle_errors
 @with_output
-def sector_top_etfs(
-    key: SectorKeyType,
-    output: OutputType = default_output,
-):
+def sector_top_etfs(key: SectorKeyType):
     """
     Gets the top ETFs for the sector.
     """
@@ -69,10 +50,7 @@ def sector_top_etfs(
 
 @handle_errors
 @with_output
-def sector_top_mutual_funds(
-    key: SectorKeyType,
-    output: OutputType = default_output,
-):
+def sector_top_mutual_funds(key: SectorKeyType):
     """
     Gets the top mutual funds for the sector.
     """

@@ -2,7 +2,7 @@ import typer
 from datetime import datetime
 from typing import Annotated
 from .validator import validate_date_string
-from .utils import increment_datetime_by_days, format_datetime
+from .utils import increment_datetime_by_days, format_datetime, raise_exception
 
 TickerType = Annotated[
     str,
@@ -21,7 +21,7 @@ OutputType = Annotated[
         callback=lambda x: (
             x
             if x in VALID_OUTPUT_TYPES
-            else throw(typer.BadParameter(f"Invalid output type: {x}"))
+            else raise_exception(typer.BadParameter(f"Invalid output type: {x}"))
         ),
         help=f"Output format ({', '.join(VALID_OUTPUT_TYPES)})",
     ),
@@ -37,7 +37,7 @@ FrequencyType = Annotated[
         callback=lambda x: (
             x
             if x in VALID_FREQUENCIES
-            else throw(typer.BadParameter(f"Invalid frequency: {x}"))
+            else raise_exception(typer.BadParameter(f"Invalid frequency: {x}"))
         ),
         help=f"Frequency of the data ({', '.join(VALID_FREQUENCIES)})",
     ),
@@ -51,7 +51,7 @@ ExtendedFrequencyType = Annotated[
         callback=lambda x: (
             x
             if x in VALID_EXTENDED_FREQUENCIES
-            else throw(typer.BadParameter(f"Invalid frequency: {x}"))
+            else raise_exception(typer.BadParameter(f"Invalid frequency: {x}"))
         ),
         help=f"Frequency of the data ({', '.join(VALID_EXTENDED_FREQUENCIES)})",
     ),
@@ -128,7 +128,7 @@ IntervalType = Annotated[
         callback=lambda x: (
             x
             if x in VALID_INTERVALS
-            else throw(typer.BadParameter(f"Invalid interval: {x}"))
+            else raise_exception(typer.BadParameter(f"Invalid interval: {x}"))
         ),
         help=f"Data interval ({', '.join(VALID_INTERVALS)})",
     ),
@@ -153,7 +153,7 @@ NewsTabType = Annotated[
         callback=lambda x: (
             x
             if x in VALID_NEWS_TABS
-            else throw(typer.BadParameter(f"Invalid news tab: {x}"))
+            else raise_exception(typer.BadParameter(f"Invalid news tab: {x}"))
         ),
         help=f"Tab of the news ({', '.join(VALID_NEWS_TABS)})",
     ),
@@ -179,7 +179,7 @@ SectorKeyType = Annotated[
         callback=lambda x: (
             x
             if x in SECTOR_KEYS
-            else throw(typer.BadParameter(f"Invalid sector key: {x}"))
+            else raise_exception(typer.BadParameter(f"Invalid sector key: {x}"))
         ),
         help=f"Sector key ({', '.join(SECTOR_KEYS)})",
     ),
@@ -191,7 +191,3 @@ IndustryKeyType = Annotated[
         help="Industry key",
     ),
 ]
-
-
-def throw(ex: Exception):
-    raise ex

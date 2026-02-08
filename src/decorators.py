@@ -1,4 +1,5 @@
 import typer
+import click
 from functools import wraps
 from pandas import DataFrame, Series
 from .writer import WriterFactory
@@ -12,7 +13,7 @@ def handle_errors(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except typer.Exit, typer.Abort, typer.BadParameter:
+        except (typer.Exit, typer.Abort, typer.BadParameter):
             raise
         except Exception as e:
             print_error(f"Unexpected error: {e}")
@@ -27,7 +28,9 @@ def with_output(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         data = func(*args, **kwargs)
-        output_type = kwargs.get("output")
+        ctx = click.get_current_context()
+        output_type = ctx.obj.get("output")
+        print(output_type)
         writer = WriterFactory.get_writer(output_type)
 
         has_data = True
@@ -46,6 +49,8 @@ def with_output(func):
                 has_data = False
             else:
                 writer.write_dict(data)
+        elif data is None:
+            has_data = False
         else:
             raise ValueError(f"Unsupported data type: {type(data)}")
 

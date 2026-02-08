@@ -1,18 +1,11 @@
 import yfinance as yf
-from ..typer import (
-    TickerType,
-    OutputType,
-    default_output,
-)
+from ..typer import TickerType
 from ..decorators import handle_errors, with_output
 
 
 @handle_errors
 @with_output
-def recommendations(
-    ticker: TickerType,
-    output: OutputType = default_output,
-):
+def recommendations(ticker: TickerType):
     """
     Get analyst recommendations for a stock ticker: number of buy, sell and hold in different time periods.
     """
@@ -23,10 +16,7 @@ def recommendations(
 
 @handle_errors
 @with_output
-def upgrades_downgrades(
-    ticker: TickerType,
-    output: OutputType = default_output,
-):
+def upgrades_downgrades(ticker: TickerType):
     """
     Get the analyst upgrades and downgrades history for a stock ticker.
     """
@@ -37,10 +27,7 @@ def upgrades_downgrades(
 
 @handle_errors
 @with_output
-def price_targets(
-    ticker: TickerType,
-    output: OutputType = default_output,
-):
+def price_targets(ticker: TickerType):
     """
     Get the analyst price targets for a stock ticker.
     """
@@ -51,10 +38,7 @@ def price_targets(
 
 @handle_errors
 @with_output
-def earnings_estimate(
-    ticker: TickerType,
-    output: OutputType = default_output,
-):
+def earnings_estimate(ticker: TickerType):
     """
     Get analyst earnings estimate for a stock ticker.
     """
@@ -65,10 +49,7 @@ def earnings_estimate(
 
 @handle_errors
 @with_output
-def revenue_estimate(
-    ticker: TickerType,
-    output: OutputType = default_output,
-):
+def revenue_estimate(ticker: TickerType):
     """
     Get analyst revenue estimate for a stock ticker.
     """
@@ -79,10 +60,7 @@ def revenue_estimate(
 
 @handle_errors
 @with_output
-def earnings_history(
-    ticker: TickerType,
-    output: OutputType = default_output,
-):
+def earnings_history(ticker: TickerType):
     """
     Get analyst earnings history for a stock ticker.
     """
@@ -93,10 +71,7 @@ def earnings_history(
 
 @handle_errors
 @with_output
-def eps_trend(
-    ticker: TickerType,
-    output: OutputType = default_output,
-):
+def eps_trend(ticker: TickerType):
     """
     Get analyst eps trend for a stock ticker.
     """
@@ -107,10 +82,7 @@ def eps_trend(
 
 @handle_errors
 @with_output
-def eps_revisions(
-    ticker: TickerType,
-    output: OutputType = default_output,
-):
+def eps_revisions(ticker: TickerType):
     """
     Get analyst eps revisions for a stock ticker.
     """
@@ -121,10 +93,7 @@ def eps_revisions(
 
 @handle_errors
 @with_output
-def growth_estimates(
-    ticker: TickerType,
-    output: OutputType = default_output,
-):
+def growth_estimates(ticker: TickerType):
     """
     Get analyst growth estimates for a stock ticker.
     """
@@ -135,10 +104,7 @@ def growth_estimates(
 
 @handle_errors
 @with_output
-def insider_purchases(
-    ticker: TickerType,
-    output: OutputType = default_output,
-):
+def insider_purchases(ticker: TickerType):
     """
     Get insider purchases for a stock ticker.
     """
@@ -149,10 +115,7 @@ def insider_purchases(
 
 @handle_errors
 @with_output
-def insider_transactions(
-    ticker: TickerType,
-    output: OutputType = default_output,
-):
+def insider_transactions(ticker: TickerType):
     """
     Get insider transactions for a stock ticker.
     """
@@ -163,10 +126,7 @@ def insider_transactions(
 
 @handle_errors
 @with_output
-def insider_roster_holders(
-    ticker: TickerType,
-    output: OutputType = default_output,
-):
+def insider_roster_holders(ticker: TickerType):
     """
     Get insider roster holders for a stock ticker.
     """
@@ -177,10 +137,7 @@ def insider_roster_holders(
 
 @handle_errors
 @with_output
-def major_holders(
-    ticker: TickerType,
-    output: OutputType = default_output,
-):
+def major_holders(ticker: TickerType):
     """
     Get major holders for a stock ticker.
     """
@@ -191,10 +148,7 @@ def major_holders(
 
 @handle_errors
 @with_output
-def institutional_holders(
-    ticker: TickerType,
-    output: OutputType = default_output,
-):
+def institutional_holders(ticker: TickerType):
     """
     Get institutional holders for a stock ticker.
     """
@@ -205,10 +159,7 @@ def institutional_holders(
 
 @handle_errors
 @with_output
-def mutualfund_holders(
-    ticker: TickerType,
-    output: OutputType = default_output,
-):
+def mutualfund_holders(ticker: TickerType):
     """
     Get mutual fund holders for a stock ticker.
     """

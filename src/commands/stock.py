@@ -9,8 +9,6 @@ from ..typer import (
     default_news_tab,
     CountType,
     default_count,
-    OutputType,
-    default_output,
 )
 from ..validator import validate_period, VALID_PERIODS, validate_date_string
 from ..decorators import handle_errors, with_output
@@ -43,7 +41,6 @@ def history(
             help="End date (YYYY-MM-DD)",
         ),
     ] = None,
-    output: OutputType = default_output,
 ):
     """
     Get historical market data for a stock ticker.
@@ -83,7 +80,6 @@ def dividends(
             help=f"Data period {', '.join(VALID_PERIODS)}",
         ),
     ] = "max",
-    output: OutputType = default_output,
 ):
     """
     Get dividends for a stock ticker.
@@ -97,7 +93,6 @@ def dividends(
 @with_output
 def fast_info(
     ticker: TickerType,
-    output: OutputType = default_output,
 ):
     """
     Get fast info summary for a stock ticker.
@@ -115,7 +110,6 @@ def news(
     ticker: TickerType,
     count: CountType = default_count,
     tab: NewsTabType = default_news_tab,
-    output: OutputType = default_output,
 ):
     """
     Get news for a stock ticker.

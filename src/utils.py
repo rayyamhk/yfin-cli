@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, NoReturn
 from datetime import datetime, timedelta
 from rich.console import Console
 
@@ -22,9 +22,13 @@ def count_specified(*args: str | None) -> int:
     return sum(x is not None for x in args)
 
 
-def format_datetime(val: datetime):
+def format_datetime(val: datetime) -> str:
     return val.strftime("%Y-%m-%d")
 
 
 def increment_datetime_by_days(date: datetime, delta: int) -> datetime:
     return date + timedelta(days=delta)
+
+
+def raise_exception(ex: Exception) -> NoReturn:
+    raise ex

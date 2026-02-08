@@ -69,7 +69,7 @@ class TestEarningsDatesCommand:
         result = runner.invoke(app, ["earnings-dates", "MSFT"])
 
         assert result.exit_code == 1
-        assert "Unexpected error" in result.output
+        assert "No data found" in result.output
 
     @patch("src.commands.financials.yf.Ticker")
     def test_earnings_dates_api_error(self, mock_ticker):

@@ -8,8 +8,6 @@ from ..typer import (
     default_offset,
     MarketCapType,
     default_market_cap,
-    OutputType,
-    default_output,
 )
 from ..decorators import handle_errors, with_output
 
@@ -22,7 +20,6 @@ def calendar_earnings(
     limit: LimitType = default_limit,
     offset: OffsetType = default_offset,
     market_cap: MarketCapType = default_market_cap,
-    output: OutputType = default_output,
 ):
     """
     Get earnings calendar.
@@ -47,7 +44,6 @@ def calendar_economic_events(
     end: EndDateType,
     limit: LimitType = default_limit,
     offset: OffsetType = default_offset,
-    output: OutputType = default_output,
 ):
     """
     Get economic events calendar.
@@ -70,7 +66,6 @@ def calendar_ipo(
     end: EndDateType,
     limit: LimitType = default_limit,
     offset: OffsetType = default_offset,
-    output: OutputType = default_output,
 ):
     """
     Get IPO calendar.

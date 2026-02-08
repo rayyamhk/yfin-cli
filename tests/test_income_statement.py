@@ -44,7 +44,7 @@ class TestIncomeStatementCommand:
             freq="yearly"
         )
 
-        result = runner.invoke(app, ["income_stmt", "AAPL"])
+        result = runner.invoke(app, ["income-stmt", "AAPL"])
 
         assert result.exit_code == 0
         assert "TotalRevenue" in result.output
@@ -62,7 +62,7 @@ class TestIncomeStatementCommand:
             freq="quarterly"
         )
 
-        result = runner.invoke(app, ["income_stmt", "AAPL", "--frequency", "quarterly"])
+        result = runner.invoke(app, ["income-stmt", "AAPL", "--frequency", "quarterly"])
 
         assert result.exit_code == 0
         assert "2025-12-31" in result.output
@@ -77,7 +77,7 @@ class TestIncomeStatementCommand:
         mock_ticker.return_value = mock_instance
         mock_instance.get_income_stmt.return_value = pd.DataFrame()
 
-        result = runner.invoke(app, ["income_stmt", "AAPL"])
+        result = runner.invoke(app, ["income-stmt", "AAPL"])
 
         # Typer exit code 1 raised explicitly
         assert result.exit_code == 1
@@ -90,7 +90,7 @@ class TestIncomeStatementCommand:
         mock_ticker.return_value = mock_instance
         mock_instance.get_income_stmt.side_effect = Exception("API Error")
 
-        result = runner.invoke(app, ["income_stmt", "AAPL"])
+        result = runner.invoke(app, ["income-stmt", "AAPL"])
 
         assert result.exit_code == 1
         assert "Unexpected error" in result.output

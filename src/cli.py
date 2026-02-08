@@ -4,6 +4,7 @@ yfin CLI - A command-line wrapper for yfinance
 """
 
 import typer
+from .typer import OutputType, default_output
 from .commands.analysis import (
     recommendations,
     upgrades_downgrades,
@@ -60,49 +61,53 @@ app = typer.Typer(
     no_args_is_help=True,
 )
 
-app.command(name="history")(history)
-app.command(name="dividends")(dividends)
-app.command(name="fast-info")(fast_info)
-app.command(name="news")(news)
+@app.callback()
+def main(ctx: typer.Context, output: OutputType=default_output):
+    ctx.ensure_object(dict)
+    ctx.obj["output"] = output
 
-app.command(name="calendar-earnings")(calendar_earnings)
-app.command(name="calendar-ipo")(calendar_ipo)
-app.command(name="calendar-economic-events")(calendar_economic_events)
+app.command()(history)
+app.command()(dividends)
+app.command()(fast_info)
+app.command()(news)
 
-app.command(name="income_stmt")(income_stmt)
-app.command(name="balance-sheet")(balance_sheet)
-app.command(name="cashflow")(cashflow)
-app.command(name="earnings-dates")(earnings_dates)
+app.command()(calendar_earnings)
+app.command()(calendar_ipo)
+app.command()(calendar_economic_events)
 
+app.command()(income_stmt)
+app.command()(balance_sheet)
+app.command()(cashflow)
+app.command()(earnings_dates)
 
-app.command(name="recommendations")(recommendations)
-app.command(name="upgrades_downgrades")(upgrades_downgrades)
-app.command(name="price-targets")(price_targets)
-app.command(name="earnings-estimate")(earnings_estimate)
-app.command(name="revenue-estimate")(revenue_estimate)
-app.command(name="earnings-history")(earnings_history)
-app.command(name="eps-trend")(eps_trend)
-app.command(name="eps-revisions")(eps_revisions)
-app.command(name="growth-estimates")(growth_estimates)
-app.command(name="insider-purchases")(insider_purchases)
-app.command(name="insider-transactions")(insider_transactions)
-app.command(name="insider-roster-holders")(insider_roster_holders)
-app.command(name="major-holders")(major_holders)
-app.command(name="institutional-holders")(institutional_holders)
-app.command(name="mutualfund-holders")(mutualfund_holders)
+app.command()(recommendations)
+app.command()(upgrades_downgrades)
+app.command()(price_targets)
+app.command()(earnings_estimate)
+app.command()(revenue_estimate)
+app.command()(earnings_history)
+app.command()(eps_trend)
+app.command()(eps_revisions)
+app.command()(growth_estimates)
+app.command()(insider_purchases)
+app.command()(insider_transactions)
+app.command()(insider_roster_holders)
+app.command()(major_holders)
+app.command()(institutional_holders)
+app.command()(mutualfund_holders)
 
-app.command(name="sector-industries")(sector_industries)
-app.command(name="sector-overview")(sector_overview)
-app.command(name="sector-research-reports")(sector_research_reports)
-app.command(name="sector-top-companies")(sector_top_companies)
-app.command(name="sector-top-etfs")(sector_top_etfs)
-app.command(name="sector-top-mutual-funds")(sector_top_mutual_funds)
+app.command()(sector_industries)
+app.command()(sector_overview)
+app.command()(sector_research_reports)
+app.command()(sector_top_companies)
+app.command()(sector_top_etfs)
+app.command()(sector_top_mutual_funds)
 
-app.command(name="industry-overview")(industry_overview)
-app.command(name="industry-research-reports")(industry_research_reports)
-app.command(name="industry-top-companies")(industry_top_companies)
-app.command(name="industry-top-growth-companies")(industry_top_growth_companies)
-app.command(name="industry-top-performing-companies")(industry_top_performing_companies)
+app.command()(industry_overview)
+app.command()(industry_research_reports)
+app.command()(industry_top_companies)
+app.command()(industry_top_growth_companies)
+app.command()(industry_top_performing_companies)
 
 if __name__ == "__main__":
     app()
