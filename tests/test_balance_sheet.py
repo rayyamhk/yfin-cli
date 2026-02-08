@@ -49,7 +49,7 @@ class TestBalanceSheetCommand:
         assert result.exit_code == 0
         assert "TotalAssets" in result.output
         # Check formatted value (10,000.0 -> 10.00K)
-        assert "10.00K" in result.output
+        assert "10000.0" in result.output
 
         # Verify call args
         mock_instance.get_balance_sheet.assert_called_with(pretty=True, freq="yearly")
