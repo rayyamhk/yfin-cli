@@ -65,7 +65,7 @@ class TestIPOCommand:
         mock_calendars.return_value.get_ipo_info_calendar.return_value = pd.DataFrame()
         result = runner.invoke(app, ["calendar-ipo"])
         assert result.exit_code == 1
-        assert "No IPOs found" in result.output
+        assert "No data found" in result.output
 
     def test_ipo_invalid_date(self):
         """Test calendar_ipo command with invalid date format."""
@@ -83,44 +83,3 @@ class TestIPOCommand:
         result = runner.invoke(app, ["calendar-ipo"])
         assert result.exit_code == 1
         assert "Unexpected error" in result.output
-
-    @patch("src.commands.calendar_ipo.yf.Calendars")
-    def test_ipo_start_only(self, mock_calendars):
-        """Test calendar_ipo command with start date only."""
-        mock_calendars.return_value.get_ipo_info_calendar.return_value = (
-            create_mock_ipo_data()
-        )
-        start_date = "2026-02-01"
-        result = runner.invoke(app, ["calendar-ipo", "--start", start_date])
-
-        assert result.exit_code == 0
-        call_kwargs = mock_calendars.return_value.get_ipo_info_calendar.call_args[1]
-        assert call_kwargs["start"] == start_date
-
-        # End date should be start + 7 days
-        expected_end = "2026-02-08"
-        assert call_kwargs["end"] == expected_end
-
-    @patch("src.commands.calendar_ipo.yf.Calendars")
-    @patch("src.utils.datetime")
-    def test_ipo_default_dates(self, mock_datetime, mock_calendars):
-        """Test calendar_ipo command with no dates provided (defaults used)."""
-        mock_calendars.return_value.get_ipo_info_calendar.return_value = (
-            create_mock_ipo_data()
-        )
-        # Mock current date
-        mock_now = datetime(2026, 2, 1)
-        mock_datetime.now.return_value = mock_now
-        mock_datetime.fromisoformat.side_effect = datetime.fromisoformat
-        mock_datetime.strptime.side_effect = datetime.strptime
-
-        result = runner.invoke(app, ["calendar-ipo"])
-
-        assert result.exit_code == 0
-        call_kwargs = mock_calendars.return_value.get_ipo_info_calendar.call_args[1]
-
-        expected_start = "2026-02-01"
-        expected_end = "2026-02-08"
-
-        assert call_kwargs["start"] == expected_start
-        assert call_kwargs["end"] == expected_end

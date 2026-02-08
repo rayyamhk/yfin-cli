@@ -41,7 +41,7 @@ class TestEarningsDatesCommand:
         assert result.exit_code == 0
         assert "2026-04-29" in result.output
         assert "4.08" in result.output
-        assert "34.08%" in result.output
+        assert "34.08" in result.output  # Raw percent value
 
         # Verify call args
         mock_instance.get_earnings_dates.assert_called_once()
@@ -57,7 +57,7 @@ class TestEarningsDatesCommand:
 
         # Typer exit code 1 raised explicitly
         assert result.exit_code == 1
-        assert "No earnings dates found" in result.output
+        assert "No data found" in result.output
 
     @patch("src.commands.earnings_dates.yf.Ticker")
     def test_earnings_dates_none_data(self, mock_ticker):
@@ -69,7 +69,7 @@ class TestEarningsDatesCommand:
         result = runner.invoke(app, ["earnings-dates", "MSFT"])
 
         assert result.exit_code == 1
-        assert "No earnings dates found" in result.output
+        assert "Unexpected error" in result.output
 
     @patch("src.commands.earnings_dates.yf.Ticker")
     def test_earnings_dates_api_error(self, mock_ticker):

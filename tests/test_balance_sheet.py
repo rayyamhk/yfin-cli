@@ -48,7 +48,6 @@ class TestBalanceSheetCommand:
 
         assert result.exit_code == 0
         assert "TotalAssets" in result.output
-        # Check formatted value (10,000.0 -> 10.00K)
         assert "10000.0" in result.output
 
         # Verify call args
@@ -87,7 +86,7 @@ class TestBalanceSheetCommand:
 
         # Typer exit code 1 raised explicitly
         assert result.exit_code == 1
-        assert "No balance sheet found" in result.output
+        assert "No data found" in result.output
 
     @patch("src.commands.balance_sheet.yf.Ticker")
     def test_balance_sheet_api_error(self, mock_ticker):

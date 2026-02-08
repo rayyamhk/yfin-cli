@@ -4,7 +4,6 @@ import pandas as pd
 from typer.testing import CliRunner
 from unittest.mock import patch, MagicMock
 from src.cli import app
-from src.commands.income_statement import _print_income_statement_table
 
 runner = CliRunner()
 
@@ -49,7 +48,7 @@ class TestIncomeStatementCommand:
 
         assert result.exit_code == 0
         assert "TotalRevenue" in result.output
-        assert "1.00K" in result.output
+        assert "1000.0" in result.output
 
         # Verify call args
         mock_instance.get_income_stmt.assert_called_with(pretty=True, freq="yearly")
@@ -84,7 +83,7 @@ class TestIncomeStatementCommand:
 
         # Typer exit code 1 raised explicitly
         assert result.exit_code == 1
-        assert "No income statement found" in result.output
+        assert "No data found" in result.output
 
     @patch("src.commands.income_statement.yf.Ticker")
     def test_income_statement_api_error(self, mock_ticker):
@@ -97,25 +96,3 @@ class TestIncomeStatementCommand:
 
         assert result.exit_code == 1
         assert "Unexpected error" in result.output
-
-
-class TestPrintIncomeStatementTable:
-    """Tests for the _print_income_statement_table helper function."""
-
-    def test_print_income_statement_table_formatting(self, capsys):
-        """Test table printing logic and formatting."""
-        # Patch console width to prevent wrapping
-        from rich.console import Console
-
-        with patch("src.utils.console", Console(width=200)):
-            data = create_mock_income_statement_data(freq="yearly")
-            _print_income_statement_table(data, "AAPL")
-
-        captured = capsys.readouterr()
-
-        # Check standard output
-        assert "TotalRevenue" in captured.out
-        # Check date headers
-        assert "2025-09-30" in captured.out
-        # Check formatted values
-        assert "1.00K" in captured.out

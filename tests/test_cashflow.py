@@ -55,7 +55,7 @@ class TestCashFlowCommand:
 
         assert result.exit_code == 0
         assert "OperatingCashFlow" in result.output
-        assert "5.00K" in result.output
+        assert "5000.0" in result.output
 
         # Verify call args
         mock_instance.get_cashflow.assert_called_with(pretty=True, freq="yearly")
@@ -104,7 +104,7 @@ class TestCashFlowCommand:
 
         # Typer exit code 1 raised explicitly
         assert result.exit_code == 1
-        assert "No cash flow statement found" in result.output
+        assert "No data found" in result.output
 
     @patch("src.commands.cashflow.yf.Ticker")
     def test_cashflow_api_error(self, mock_ticker):

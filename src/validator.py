@@ -1,7 +1,7 @@
 import typer
 from datetime import datetime
 from pandas import DataFrame
-
+from .utils import print_warning
 
 def validate_date_string(value: str) -> str:
     """Validate date string format (YYYY-MM-DD)"""
@@ -17,6 +17,7 @@ def validate_date_string(value: str) -> str:
 def validate_data_frame_has_data(data: DataFrame) -> DataFrame:
     """Validate that data frame is not empty."""
     if data.empty:
+        print_warning("No data found")
         raise typer.Exit(code=1)
     return data
 

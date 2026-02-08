@@ -13,6 +13,10 @@ def print_error(content: Any):
     console.print(f"[red]{content}[/red]")
 
 
+def print_warning(content: Any):
+    console.print(f"[yellow]{content}[/yellow]")
+
+
 def count_specified(*args: str | None) -> int:
     """Count the number of specified arguments"""
     return sum(x is not None for x in args)

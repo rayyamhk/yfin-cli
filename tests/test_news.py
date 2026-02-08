@@ -3,7 +3,6 @@
 from typer.testing import CliRunner
 from unittest.mock import patch
 from src.cli import app
-from src.commands.news import _print_news_table, VALID_TABS
 
 runner = CliRunner()
 
@@ -64,8 +63,8 @@ class TestNewsCommand:
     def test_news_invalid_tab(self):
         """Test news command with invalid tab option."""
         result = runner.invoke(app, ["news", "TSLA", "--tab", "invalid"])
-        assert result.exit_code == 1
-        assert "Invalid choice" in result.stdout
+        assert result.exit_code == 2
+        assert "Invalid value" in result.output
 
     @patch("src.commands.news.yf.Ticker")
     def test_news_no_articles(self, mock_ticker):
@@ -73,7 +72,7 @@ class TestNewsCommand:
         mock_ticker.return_value.get_news.return_value = []
         result = runner.invoke(app, ["news", "TSLA"])
         assert result.exit_code == 1
-        assert "No news found" in result.stdout
+        assert "No data found" in result.output
 
     @patch("src.commands.news.yf.Ticker")
     def test_news_ticker_uppercase(self, mock_ticker):
@@ -88,59 +87,5 @@ class TestNewsCommand:
         mock_ticker.return_value.get_news.side_effect = Exception("API Error")
         result = runner.invoke(app, ["news", "TSLA"])
         assert result.exit_code == 1
-        assert "Unexpected error" in result.stdout
+        assert "Unexpected error" in result.output
 
-
-class TestPrintNewsTable:
-    """Tests for the _print_news_table helper function."""
-
-    def test_print_news_table_with_valid_data(self, capsys):
-        """Test table printing with valid article data."""
-        # This test verifies the function doesn't crash with valid data
-        _print_news_table("TSLA", MOCK_ARTICLES)
-        captured = capsys.readouterr()
-        # Rich table may wrap text, so check for partial match
-        assert "Test Article" in captured.out
-
-    def test_print_news_table_with_missing_fields(self, capsys):
-        """Test table handles missing fields gracefully."""
-        articles_with_missing = [
-            {
-                "content": {
-                    "title": "Title Only",
-                    # Missing: pubDate, summary, canonicalUrl, provider
-                }
-            }
-        ]
-        _print_news_table("TSLA", articles_with_missing)
-        captured = capsys.readouterr()
-        assert "Title Only" in captured.out
-        assert "N/A" in captured.out
-
-    def test_print_news_table_with_none_values(self, capsys):
-        """Test table handles None values gracefully."""
-        articles_with_none = [
-            {
-                "content": {
-                    "pubDate": None,
-                    "title": None,
-                    "summary": None,
-                    "canonicalUrl": None,
-                    "provider": None,
-                }
-            }
-        ]
-        _print_news_table("TSLA", articles_with_none)
-        captured = capsys.readouterr()
-        assert "N/A" in captured.out
-
-
-class TestValidTabs:
-    """Tests for VALID_TABS constant."""
-
-    def test_valid_tabs_contains_expected_values(self):
-        """Test VALID_TABS has all expected options."""
-        assert "all" in VALID_TABS
-        assert "news" in VALID_TABS
-        assert "press releases" in VALID_TABS
-        assert len(VALID_TABS) == 3

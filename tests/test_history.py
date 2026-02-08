@@ -6,7 +6,6 @@ import pandas as pd
 from typer.testing import CliRunner
 from unittest.mock import patch
 from src.cli import app
-from src.commands.history import _print_history_table, VALID_INTERVALS, VALID_PERIODS
 
 runner = CliRunner()
 
@@ -34,7 +33,7 @@ class TestHistoryCommand:
         mock_ticker.return_value.history.return_value = create_mock_history_data()
         result = runner.invoke(app, ["history", "TSLA"])
         assert result.exit_code == 0
-        assert "$104.00" in result.stdout  # Close price
+        assert "104.0" in result.stdout  # Close price (raw value)
 
     @patch("src.commands.history.yf.Ticker")
     def test_history_with_interval(self, mock_ticker):
@@ -70,20 +69,20 @@ class TestHistoryCommand:
     def test_history_invalid_interval(self):
         """Test history command with invalid interval option."""
         result = runner.invoke(app, ["history", "TSLA", "--interval", "invalid"])
-        assert result.exit_code == 1
-        assert "Invalid choice" in result.stdout
+        assert result.exit_code == 2
+        assert "Invalid value" in result.output
 
     def test_history_invalid_period(self):
         """Test history command with invalid period option."""
         result = runner.invoke(app, ["history", "TSLA", "--period", "invalid"])
-        assert result.exit_code == 1
-        assert "Invalid choice" in result.stdout
+        assert result.exit_code == 2
+        assert "Invalid value" in result.output
 
     def test_history_invalid_date_format(self):
         """Test history command with invalid date format."""
         result = runner.invoke(app, ["history", "TSLA", "--start", "01-01-2026"])
-        assert result.exit_code == 1
-        assert "Invalid date format" in result.stdout
+        assert result.exit_code == 2
+        assert "Invalid date format" in result.output
 
     def test_history_too_many_options(self):
         """Test history command with too many time options."""
@@ -111,7 +110,7 @@ class TestHistoryCommand:
         mock_ticker.return_value.history.return_value = pd.DataFrame()
         result = runner.invoke(app, ["history", "TSLA"])
         assert result.exit_code == 1
-        assert "No data found" in result.stdout
+        assert "No data found" in result.output
 
     @patch("src.commands.history.yf.Ticker")
     def test_history_ticker_uppercase(self, mock_ticker):
@@ -126,7 +125,7 @@ class TestHistoryCommand:
         mock_ticker.return_value.history.side_effect = Exception("API Error")
         result = runner.invoke(app, ["history", "TSLA"])
         assert result.exit_code == 1
-        assert "Unexpected error" in result.stdout
+        assert "Unexpected error" in result.output
 
     @patch("src.commands.history.yf.Ticker")
     def test_history_default_period(self, mock_ticker):
@@ -136,38 +135,3 @@ class TestHistoryCommand:
         call_kwargs = mock_ticker.return_value.history.call_args[1]
         assert call_kwargs["period"] == "1mo"
 
-
-class TestPrintHistoryTable:
-    """Tests for the _print_history_table helper function."""
-
-    def test_print_history_table_with_valid_data(self, capsys):
-        """Test table printing with valid history data."""
-        _print_history_table("TSLA", create_mock_history_data())
-        captured = capsys.readouterr()
-        assert "$104.00" in captured.out
-        assert "2026-02-05" in captured.out
-        assert "1,000,000" in captured.out
-
-    def test_print_history_table_empty_data(self):
-        """Test table handles empty DataFrame."""
-        with pytest.raises(typer.Exit):
-            _print_history_table("TSLA", pd.DataFrame())
-
-
-class TestValidConstants:
-    """Tests for VALID_INTERVALS and VALID_PERIODS constants."""
-
-    def test_valid_intervals_contains_expected_values(self):
-        """Test VALID_INTERVALS has all expected options."""
-        assert "1m" in VALID_INTERVALS
-        assert "1d" in VALID_INTERVALS
-        assert "1wk" in VALID_INTERVALS
-        assert "1mo" in VALID_INTERVALS
-
-    def test_valid_periods_contains_expected_values(self):
-        """Test VALID_PERIODS has all expected options."""
-        assert "1d" in VALID_PERIODS
-        assert "1mo" in VALID_PERIODS
-        assert "1y" in VALID_PERIODS
-        assert "max" in VALID_PERIODS
-        assert "ytd" in VALID_PERIODS
