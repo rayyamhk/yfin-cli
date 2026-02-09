@@ -1,6 +1,7 @@
 import yfinance as yf
 from ..typer import TickerType
 from ..decorators import handle_errors, with_output
+from ..utils import data_frame_to_list
 
 
 @handle_errors
@@ -11,7 +12,7 @@ def recommendations(ticker: TickerType):
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_recommendations()
-    return data_frame
+    return data_frame_to_list(data_frame)
 
 
 @handle_errors
@@ -22,7 +23,7 @@ def upgrades_downgrades(ticker: TickerType):
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_upgrades_downgrades()
-    return data_frame
+    return data_frame_to_list(data_frame)
 
 
 @handle_errors
@@ -32,8 +33,7 @@ def price_targets(ticker: TickerType):
     Get the analyst price targets for a stock ticker.
     """
     stock = yf.Ticker(ticker)
-    data_frame = stock.get_analyst_price_targets()
-    return data_frame
+    return stock.get_analyst_price_targets()
 
 
 @handle_errors
@@ -44,7 +44,7 @@ def earnings_estimate(ticker: TickerType):
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_earnings_estimate()
-    return data_frame
+    return data_frame_to_list(data_frame)
 
 
 @handle_errors
@@ -55,7 +55,7 @@ def revenue_estimate(ticker: TickerType):
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_revenue_estimate()
-    return data_frame
+    return data_frame_to_list(data_frame)
 
 
 @handle_errors
@@ -66,7 +66,7 @@ def earnings_history(ticker: TickerType):
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_earnings_history()
-    return data_frame
+    return data_frame_to_list(data_frame)
 
 
 @handle_errors
@@ -77,7 +77,7 @@ def eps_trend(ticker: TickerType):
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_eps_trend()
-    return data_frame
+    return data_frame_to_list(data_frame)
 
 
 @handle_errors
@@ -88,7 +88,7 @@ def eps_revisions(ticker: TickerType):
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_eps_revisions()
-    return data_frame
+    return data_frame_to_list(data_frame)
 
 
 @handle_errors
@@ -99,7 +99,7 @@ def growth_estimates(ticker: TickerType):
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_growth_estimates()
-    return data_frame
+    return data_frame_to_list(data_frame)
 
 
 @handle_errors
@@ -110,7 +110,7 @@ def insider_purchases(ticker: TickerType):
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_insider_purchases()
-    return data_frame
+    return data_frame_to_list(data_frame)
 
 
 @handle_errors
@@ -121,7 +121,7 @@ def insider_transactions(ticker: TickerType):
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_insider_transactions()
-    return data_frame
+    return data_frame_to_list(data_frame)
 
 
 @handle_errors
@@ -132,7 +132,7 @@ def insider_roster_holders(ticker: TickerType):
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_insider_roster_holders()
-    return data_frame
+    return data_frame_to_list(data_frame)
 
 
 @handle_errors
@@ -143,7 +143,7 @@ def major_holders(ticker: TickerType):
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_major_holders()
-    return data_frame
+    return data_frame_to_list(data_frame, index_name="Breakdown")
 
 
 @handle_errors
@@ -154,7 +154,7 @@ def institutional_holders(ticker: TickerType):
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_institutional_holders()
-    return data_frame
+    return data_frame_to_list(data_frame)
 
 
 @handle_errors
@@ -165,4 +165,4 @@ def mutualfund_holders(ticker: TickerType):
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_mutualfund_holders()
-    return data_frame
+    return data_frame_to_list(data_frame)

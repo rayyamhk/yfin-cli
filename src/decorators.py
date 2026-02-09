@@ -32,29 +32,13 @@ def with_output(func):
         output_type = ctx.obj.get("output")
         writer = WriterFactory.get_writer(output_type)
 
-        has_data = True
-        if isinstance(data, (DataFrame, Series)):
-            if data.empty:
-                has_data = False
-            else:
-                writer.write_dataframe(data)
-        elif isinstance(data, list):
-            if not data:
-                has_data = False
-            else:
-                writer.write_list(data)
-        elif isinstance(data, dict):
-            if not data:
-                has_data = False
-            else:
-                writer.write_dict(data)
-        elif data is None:
-            has_data = False
-        else:
+        if not isinstance(data, (dict, list)):
             raise ValueError(f"Unsupported data type: {type(data)}")
 
-        if not has_data:
+        if not data:
             print_warning("No data found")
             raise typer.Exit(code=1)
+
+        writer.write(data)
 
     return wrapper

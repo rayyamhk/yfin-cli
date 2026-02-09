@@ -12,7 +12,7 @@ from ..typer import (
 )
 from ..validator import validate_period, VALID_PERIODS, validate_date_string
 from ..decorators import handle_errors, with_output
-from ..utils import count_specified
+from ..utils import count_specified, data_frame_to_list, series_to_list
 
 
 @handle_errors
@@ -66,7 +66,7 @@ def history(
 
     stock = yf.Ticker(ticker)
     data_frame = stock.history(**kwargs)
-    return data_frame
+    return data_frame_to_list(data_frame)
 
 
 @handle_errors
@@ -85,8 +85,8 @@ def dividends(
     Get dividends for a stock ticker.
     """
     stock = yf.Ticker(ticker)
-    data_frame = stock.get_dividends(period=period)
-    return data_frame
+    series = stock.get_dividends(period=period)
+    return series_to_list(series)
 
 
 @handle_errors
@@ -116,17 +116,16 @@ def news(
     """
     stock = yf.Ticker(ticker)
     news_list = stock.get_news(count, tab)
-    processed_news_list = []
-    for article in news_list:
-        content = article.get("content") or {}
-        processed_news_list.append(
-            {
-                "Date": content.get("pubDate"),
-                "Title": content.get("title"),
-                "Summary": content.get("summary"),
-                "URL": (content.get("canonicalUrl") or {}).get("url"),
-                "Source": (content.get("provider") or {}).get("displayName"),
-            }
-        )
-
-    return processed_news_list
+    # processed_news_list = []
+    # for article in news_list:
+    #     content = article.get("content") or {}
+    #     processed_news_list.append(
+    #         {
+    #             "Date": content.get("pubDate"),
+    #             "Title": content.get("title"),
+    #             "Summary": content.get("summary"),
+    #             "URL": (content.get("canonicalUrl") or {}).get("url"),
+    #             "Source": (content.get("provider") or {}).get("displayName"),
+    #         }
+    #     )
+    return news_list

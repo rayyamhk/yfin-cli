@@ -9,6 +9,7 @@ from ..typer import (
     LimitType,
     default_limit,
 )
+from ..utils import data_frame_to_list
 from ..decorators import handle_errors, with_output
 
 
@@ -23,7 +24,7 @@ def income_stmt(
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_income_stmt(pretty=True, freq=frequency)
-    return data_frame
+    return data_frame_to_list(data_frame.T, index_name="Date")
 
 
 @handle_errors
@@ -37,7 +38,7 @@ def balance_sheet(
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_balance_sheet(pretty=True, freq=frequency)
-    return data_frame
+    return data_frame_to_list(data_frame.T, index_name="Date")
 
 
 @handle_errors
@@ -51,7 +52,7 @@ def cashflow(
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_cashflow(pretty=True, freq=frequency)
-    return data_frame
+    return data_frame_to_list(data_frame.T, index_name="Date")
 
 
 @handle_errors
@@ -66,4 +67,4 @@ def earnings_dates(
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_earnings_dates(limit=limit, offset=offset)
-    return data_frame
+    return data_frame_to_list(data_frame)

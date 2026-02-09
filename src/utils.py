@@ -32,3 +32,18 @@ def increment_datetime_by_days(date: datetime, delta: int) -> datetime:
 
 def raise_exception(ex: Exception) -> NoReturn:
     raise ex
+
+def is_number(s: str) -> bool:
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
+
+def data_frame_to_list(data_frame: DataFrame, index_name: str | None = None) -> list:
+    return data_frame.reset_index(names=index_name).to_dict(orient="records")
+
+
+def series_to_list(series: Series) -> list:
+    return series.reset_index().to_dict(orient="records")

@@ -10,6 +10,7 @@ from ..typer import (
     default_market_cap,
 )
 from ..decorators import handle_errors, with_output
+from ..utils import data_frame_to_list
 
 
 @handle_errors
@@ -34,7 +35,7 @@ def calendar_earnings(
 
     calendars = yf.Calendars()
     data_frame = calendars.get_earnings_calendar(**kwargs)
-    return data_frame
+    return data_frame_to_list(data_frame)
 
 
 @handle_errors
@@ -56,7 +57,7 @@ def calendar_economic_events(
 
     calendars = yf.Calendars()
     data_frame = calendars.get_economic_events_calendar(**kwargs)
-    return data_frame
+    return data_frame_to_list(data_frame)
 
 
 @handle_errors
@@ -78,4 +79,4 @@ def calendar_ipo(
 
     calendars = yf.Calendars()
     data_frame = calendars.get_ipo_info_calendar(**kwargs)
-    return data_frame
+    return data_frame_to_list(data_frame)

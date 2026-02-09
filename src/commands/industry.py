@@ -1,6 +1,7 @@
 import yfinance as yf
 from ..typer import IndustryKeyType
 from ..decorators import handle_errors, with_output
+from ..utils import data_frame_to_list
 
 
 @handle_errors
@@ -27,7 +28,7 @@ def industry_top_companies(key: IndustryKeyType):
     """
     Get the top companies within the domain entity.
     """
-    return yf.Industry(key).top_companies
+    return data_frame_to_list(yf.Industry(key).top_companies)
 
 
 @handle_errors
@@ -36,7 +37,7 @@ def industry_top_growth_companies(key: IndustryKeyType):
     """
     Get the top growth companies in the industry.
     """
-    return yf.Industry(key).top_growth_companies
+    return data_frame_to_list(yf.Industry(key).top_growth_companies)
 
 
 @handle_errors
@@ -45,4 +46,4 @@ def industry_top_performing_companies(key: IndustryKeyType):
     """
     Get the top performing companies in the industry.
     """
-    return yf.Industry(key).top_performing_companies
+    return data_frame_to_list(yf.Industry(key).top_performing_companies)
