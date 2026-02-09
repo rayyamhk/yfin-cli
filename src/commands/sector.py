@@ -1,4 +1,3 @@
-import pandas as pd
 import yfinance as yf
 from ..typer import SectorKeyType
 from ..decorators import handle_errors, with_output
@@ -56,7 +55,10 @@ def sector_top_etfs(key: SectorKeyType):
     """
     Get the top ETFs for the sector.
     """
-    return [{"symbol": symbol, "name": name} for symbol, name in yf.Sector(key).top_etfs.items()]
+    return [
+        {"symbol": symbol, "name": name}
+        for symbol, name in yf.Sector(key).top_etfs.items()
+    ]
 
 
 @handle_errors
@@ -65,4 +67,7 @@ def sector_top_mutual_funds(key: SectorKeyType):
     """
     Get the top mutual funds for the sector.
     """
-    return [{"symbol": symbol, "name": name} for symbol, name in yf.Sector(key).top_mutual_funds.items()]
+    return [
+        {"symbol": symbol, "name": name}
+        for symbol, name in yf.Sector(key).top_mutual_funds.items()
+    ]

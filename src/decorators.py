@@ -1,7 +1,6 @@
 import typer
 import click
 from functools import wraps
-from pandas import DataFrame, Series
 from .writer import WriterFactory
 from .utils import print_error, print_warning
 
@@ -13,7 +12,7 @@ def handle_errors(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except (typer.Exit, typer.Abort, typer.BadParameter):
+        except typer.Exit, typer.Abort, typer.BadParameter:
             raise
         except Exception as e:
             print_error(f"Unexpected error: {e}")

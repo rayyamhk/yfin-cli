@@ -11,7 +11,7 @@ TickerType = Annotated[
     ),
 ]
 
-VALID_OUTPUT_TYPES = ["raw", "table"]
+VALID_OUTPUT_TYPES = ["json"]
 
 default_output = VALID_OUTPUT_TYPES[0]
 
@@ -169,6 +169,49 @@ SectorKeyType = Annotated[
 IndustryKeyType = Annotated[
     str,
     typer.Argument(
-        help="A valid industry key, can be found using `yfin sector-industries {sector-key}`",
+        help="A valid industry key, can be found using `yfin sector-industries <sector-key>`",
+    ),
+]
+
+ScreenFilterType = Annotated[
+    list[str] | None,
+    typer.Option(
+        "--filter",  # parameter name is plural
+        help="Filter in '<field> <operator> <value>' format (e.g., 'sector eq Technology')",
+    ),
+]
+
+ScreenPredefinedQueryType = Annotated[
+    str | None,
+    typer.Option(
+        help="Predefined query, can be found using `yfin screen-predefined-queries`",
+    ),
+]
+
+ScreenJsonQueryType = Annotated[
+    str | None,
+    typer.Option(
+        help="Complex query in JSON format: {'operator': 'and|or', 'queries': [<filter1>, <filter2>, <json_query>, ...]}.",
+    ),
+]
+
+ScreenQueryFieldType = Annotated[
+    str | None,
+    typer.Option(
+        help="Query field, can be found using `yfin screen-query-fields`",
+    ),
+]
+
+default_sort_order = "desc"
+
+ScreenSortOrderType = Annotated[
+    str | None,
+    typer.Option(
+        callback=lambda x: (
+            x
+            if x in ["asc", "desc"]
+            else raise_exception(typer.BadParameter(f"Invalid sort order: {x}"))
+        ),
+        help="Sort order, can be 'asc' or 'desc'",
     ),
 ]

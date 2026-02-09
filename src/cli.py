@@ -55,6 +55,12 @@ from .commands.stock import (
     fast_info,
     news,
 )
+from .commands.screen import (
+    screen,
+    screen_query_fields,
+    screen_query_values,
+    screen_predefined_queries,
+)
 
 app = typer.Typer(
     name="yfin",
@@ -62,10 +68,12 @@ app = typer.Typer(
     no_args_is_help=True,
 )
 
+
 @app.callback()
-def main(ctx: typer.Context, output: OutputType=default_output):
+def main(ctx: typer.Context, output: OutputType = default_output):
     ctx.ensure_object(dict)
     ctx.obj["output"] = output
+
 
 app.command(rich_help_panel="Stock")(history)
 app.command(rich_help_panel="Stock")(dividends)
@@ -110,6 +118,11 @@ app.command(rich_help_panel="Industry")(industry_research_reports)
 app.command(rich_help_panel="Industry")(industry_top_companies)
 app.command(rich_help_panel="Industry")(industry_top_growth_companies)
 app.command(rich_help_panel="Industry")(industry_top_performing_companies)
+
+app.command(rich_help_panel="Screen")(screen)
+app.command(rich_help_panel="Screen")(screen_query_fields)
+app.command(rich_help_panel="Screen")(screen_query_values)
+app.command(rich_help_panel="Screen")(screen_predefined_queries)
 
 if __name__ == "__main__":
     app()
