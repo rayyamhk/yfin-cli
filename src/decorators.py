@@ -2,7 +2,7 @@ import typer
 import click
 from functools import wraps
 from .writer import WriterFactory
-from .utils import print_error, print_warning
+from .utils import console_print_error, console_print_warning
 
 
 def handle_errors(func):
@@ -12,10 +12,10 @@ def handle_errors(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except typer.Exit, typer.Abort, typer.BadParameter:
+        except (typer.Exit, typer.Abort, typer.BadParameter):
             raise
         except Exception as e:
-            print_error(f"Unexpected error: {e}")
+            console_print_error(f"Unexpected error: {e}")
             raise typer.Exit(code=1)
 
     return wrapper
@@ -31,12 +31,12 @@ def with_output(func):
         output_type = ctx.obj.get("output")
         writer = WriterFactory.get_writer(output_type)
 
+        if data is None:
+            console_print_warning("No data found")
+            raise typer.Exit(code=1)
+
         if not isinstance(data, (dict, list)):
             raise ValueError(f"Unsupported data type: {type(data)}")
-
-        if not data:
-            print_warning("No data found")
-            raise typer.Exit(code=1)
 
         writer.write(data)
 

@@ -100,7 +100,10 @@ def fast_info(
     Returns key metrics like price, market cap, volume, and 52-week range.
     """
     stock = yf.Ticker(ticker)
-    fast_info_dict = dict(stock.get_fast_info())  # fast_info is a dict-like object
+    fast_info = stock.get_fast_info()
+    if fast_info is None:
+        return None
+    fast_info_dict = dict(fast_info)  # fast_info is a dict-like object
     return fast_info_dict
 
 

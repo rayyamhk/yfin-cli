@@ -107,8 +107,8 @@ class TestHistoryCommand:
         """Test history command when no data is found."""
         mock_ticker.return_value.history.return_value = pd.DataFrame()
         result = runner.invoke(app, ["history", "TSLA"])
-        assert result.exit_code == 1
-        assert "No data found" in result.output
+        assert result.exit_code == 0
+        assert "[]" in result.output
 
     @patch("src.commands.stock.yf.Ticker")
     def test_history_ticker_uppercase(self, mock_ticker):

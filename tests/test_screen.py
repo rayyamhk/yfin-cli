@@ -106,7 +106,9 @@ class TestParseJsonQuery:
 
     def test_parse_json_query_and_operator(self):
         """Test parsing a JSON query with 'and' operator."""
-        json_str = '{"operator": "and", "queries": ["sector eq Technology", "beta gt 1"]}'
+        json_str = (
+            '{"operator": "and", "queries": ["sector eq Technology", "beta gt 1"]}'
+        )
         result = parse_json_query(json_str)
         assert isinstance(result, yf.EquityQuery)
 
@@ -118,7 +120,7 @@ class TestParseJsonQuery:
 
     def test_parse_json_query_nested(self):
         """Test parsing a nested JSON query."""
-        json_str = '''{
+        json_str = """{
             "operator": "and",
             "queries": [
                 "beta gt 1",
@@ -127,7 +129,7 @@ class TestParseJsonQuery:
                     "queries": ["sector eq Technology", "sector eq Healthcare"]
                 }
             ]
-        }'''
+        }"""
         result = parse_json_query(json_str)
         assert isinstance(result, yf.EquityQuery)
 

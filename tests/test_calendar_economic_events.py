@@ -65,8 +65,8 @@ class TestEconomicEventsCommand:
             pd.DataFrame()
         )
         result = runner.invoke(app, ["calendar-economic-events"])
-        assert result.exit_code == 1
-        assert "No data found" in result.output
+        assert result.exit_code == 0
+        assert "[]" in result.output
 
     def test_economic_events_invalid_date(self):
         """Test calendar-economic-events command with invalid date format."""

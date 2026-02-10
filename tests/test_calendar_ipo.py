@@ -63,8 +63,8 @@ class TestIPOCommand:
         """Test calendar_ipo command when no data is found."""
         mock_calendars.return_value.get_ipo_info_calendar.return_value = pd.DataFrame()
         result = runner.invoke(app, ["calendar-ipo"])
-        assert result.exit_code == 1
-        assert "No data found" in result.output
+        assert result.exit_code == 0
+        assert "[]" in result.output
 
     def test_ipo_invalid_date(self):
         """Test calendar_ipo command with invalid date format."""

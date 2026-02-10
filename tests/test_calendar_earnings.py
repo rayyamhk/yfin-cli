@@ -63,8 +63,8 @@ class TestEarningsCommand:
         """Test calendar-earnings command when no data is found."""
         mock_calendars.return_value.get_earnings_calendar.return_value = pd.DataFrame()
         result = runner.invoke(app, ["calendar-earnings"])
-        assert result.exit_code == 1
-        assert "No data found" in result.stdout
+        assert result.exit_code == 0
+        assert "[]" in result.stdout
 
     def test_earnings_invalid_date(self):
         """Test calendar-earnings command with invalid date format."""

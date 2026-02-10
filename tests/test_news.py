@@ -71,8 +71,8 @@ class TestNewsCommand:
         """Test news command when no articles are found."""
         mock_ticker.return_value.get_news.return_value = []
         result = runner.invoke(app, ["news", "TSLA"])
-        assert result.exit_code == 1
-        assert "No data found" in result.output
+        assert result.exit_code == 0
+        assert "[]" in result.output
 
     @patch("src.commands.stock.yf.Ticker")
     def test_news_ticker_uppercase(self, mock_ticker):

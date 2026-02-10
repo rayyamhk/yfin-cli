@@ -102,9 +102,8 @@ class TestCashFlowCommand:
 
         result = runner.invoke(app, ["cashflow", "MSFT"])
 
-        # Typer exit code 1 raised explicitly
-        assert result.exit_code == 1
-        assert "No data found" in result.output
+        assert result.exit_code == 0
+        assert "[]" in result.output
 
     @patch("src.commands.financials.yf.Ticker")
     def test_cashflow_api_error(self, mock_ticker):

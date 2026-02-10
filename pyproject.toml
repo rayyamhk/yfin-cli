@@ -3,11 +3,12 @@ name = "yfin-cli"
 version = "0.1.0"
 description = "A command-line interface for Yahoo Finance data"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.10"
 dependencies = [
     "lxml>=6.0.2",
     "typer>=0.21.1",
     "yfinance>=1.1.0",
+    "rich>=14.2.0",
 ]
 
 [project.scripts]

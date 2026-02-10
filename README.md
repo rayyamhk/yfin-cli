@@ -10,11 +10,15 @@ A command-line interface for [Yahoo Finance](https://finance.yahoo.com/) data, p
 - **Fast Info** - Quick summary of key metrics (price, market cap, 52-week range)
 - **News** - Latest news articles for a ticker
 
+### Market
+- **Market Status** - Current US market status (open/closed, trading hours, timezone)
+
 ### Financial Statements
-- **Income Statement** (`income-stmt`) - Revenue, expenses, net income
-- **Balance Sheet** (`balance-sheet`) - Assets, liabilities, equity
-- **Cash Flow** (`cashflow`) - Operating, investing, financing activities
-- **Earnings Dates** (`earnings-dates`) - Past and upcoming earnings with EPS estimates
+- **Income Statement** - Revenue, expenses, net income
+- **Balance Sheet** - Assets, liabilities, equity
+- **Cash Flow** - Operating, investing, financing activities
+- **Earnings Dates** - Past and upcoming earnings with EPS estimates
+- **SEC Filings** - SEC filings for a ticker
 
 ### Analyst Data
 - **Recommendations** - Buy/sell/hold ratings summary
@@ -31,16 +35,16 @@ A command-line interface for [Yahoo Finance](https://finance.yahoo.com/) data, p
 - **Mutual Fund Holders** - Mutual fund ownership
 
 ### Calendar Events
-- **Earnings Calendar** (`calendar-earnings`) - Upcoming earnings releases
-- **IPO Calendar** (`calendar-ipo`) - Upcoming IPOs
-- **Economic Events** (`calendar-economic-events`) - Economic indicators and releases
+- **Earnings Calendar** - Upcoming earnings releases
+- **IPO Calendar** - Upcoming IPOs
+- **Economic Events** - Economic indicators and releases
 
 ### Sector & Industry Analysis
 - **Sector Commands** - Industries, overview, top companies, ETFs, mutual funds
 - **Industry Commands** - Overview, top companies, growth companies, top performers
 
 ### Stock Screener
-- **Screen** (`screen`) - Filter stocks by criteria (sector, market cap, beta, etc.)
+- **Screen** - Filter stocks by criteria (sector, market cap, beta, etc.)
 - **Predefined Queries** - Use built-in screeners (day gainers, most actives, undervalued stocks)
 - **JSON Queries** - Complex nested AND/OR logic for advanced screening
 
@@ -68,7 +72,7 @@ yfin [OPTIONS] COMMAND [ARGS]...
 
 | Option | Description | Default |
 |--------|-------------|---------|
-| `--output` | Output format (`raw` or `table`) | `raw` |
+| `--output` | Output format (`table`) | `table` |
 | `--help` | Show help message | - |
 
 ### Examples
@@ -128,7 +132,8 @@ yfin news GOOGL --count 10
 | Category | Commands |
 |----------|----------|
 | **Stock** | `history`, `dividends`, `fast-info`, `news` |
-| **Financials** | `income-stmt`, `balance-sheet`, `cashflow`, `earnings-dates` |
+| **Market** | `market-status` |
+| **Financials** | `income-stmt`, `balance-sheet`, `cashflow`, `earnings-dates`, `sec-filings` |
 | **Analysis** | `recommendations`, `upgrades-downgrades`, `price-targets`, `earnings-estimate`, `revenue-estimate`, `earnings-history`, `eps-trend`, `eps-revisions`, `growth-estimates` |
 | **Holders** | `insider-purchases`, `insider-transactions`, `insider-roster-holders`, `major-holders`, `institutional-holders`, `mutualfund-holders` |
 | **Calendar** | `calendar-earnings`, `calendar-ipo`, `calendar-economic-events` |

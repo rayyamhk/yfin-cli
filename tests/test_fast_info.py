@@ -58,7 +58,7 @@ class TestFastInfoCommand:
         mock_ticker.return_value.get_fast_info.return_value = None
         result = runner.invoke(app, ["fast-info", "INVALID"])
         assert result.exit_code == 1
-        assert "Unexpected error" in result.output
+        assert "No data found" in result.output
 
     @patch("src.commands.stock.yf.Ticker")
     def test_fast_info_ticker_uppercase(self, mock_ticker):
