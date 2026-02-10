@@ -32,9 +32,11 @@ def test_parse_filter_valid_eq(filter_str):
         "beta lt 2",
         "avgdailyvol3m lte 1000000",
         "beta btwn 0.5,1.5",
-        "exchange is-in NYQ,NMS",
+        "beta btwn 0.5,      1.5  ",
+        "exchange is-in NYQ,NMS,CXI",
+        "exchange is-in NYQ,    NMS ,   CXI ",
     ],
-    ids=["gt", "gte", "lt", "lte", "btwn", "is_in"],
+    ids=["gt", "gte", "lt", "lte", "btwn", "btwn_whitespace", "is_in", "is_in_whitespace"],
 )
 def test_parse_filter_valid_operators(filter_str):
     result = parse_filter(filter_str)
@@ -44,6 +46,7 @@ def test_parse_filter_valid_operators(filter_str):
 @pytest.mark.parametrize(
     "filter_str, error_fragment",
     [
+        {"sector", "Invalid filter format"},
         ("sector eq", "Invalid filter format"),
         ("sector Technology", "Invalid filter format"),
         ("invalidField eq value", "Invalid field"),
@@ -52,6 +55,7 @@ def test_parse_filter_valid_operators(filter_str):
         ("sector eq InvalidSector", "Invalid value"),
     ],
     ids=[
+        "missing_operator",
         "missing_value",
         "missing_operator",
         "invalid_field",
@@ -127,3 +131,22 @@ def test_parse_json_query_invalid(json_str, error_fragment):
     with pytest.raises(typer.BadParameter) as exc_info:
         parse_json_query(json_str)
     assert error_fragment in str(exc_info.value)
+
+
+def test_screen_query_values_invalid_field(invoke):
+    """Test that screen-query-values returns a warning for an invalid field."""
+    result = invoke("screen-query-values", "--field", "invalid_field")
+    assert result.exit_code == 2
+    assert "Invalid field" in result.output
+
+
+def test_screen_query_values_field_with_no_fixed_values(invoke):
+    """Test that screen-query-values returns a warning for a valid field with no fixed values."""
+    result = invoke("screen-query-values", "--field", "invalid_field")
+    assert result.exit_code == 2
+    assert "Invalid field" in result.output
+
+def test_screen_query_values_valid_field_with_fixed_values(invoke):
+    result = invoke("screen-query-values", "--field", "sector")
+    assert result.exit_code == 0
+    assert '"value": "Technology"' in result.output

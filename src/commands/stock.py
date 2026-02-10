@@ -1,46 +1,30 @@
 import yfinance as yf
 import typer
-from typing import Annotated
 from ..typer import (
     TickerType,
     IntervalType,
     default_interval,
+    StartDateTypeOptional,
+    EndDateTypeOptional,
+    PeriodTypeOptional,
+    PeriodType,
+    default_period,
     NewsTabType,
     default_news_tab,
     CountType,
     default_count,
 )
-from ..validator import validate_period, VALID_PERIODS, validate_date_string
-from ..decorators import handle_errors, with_output
-from ..utils import count_specified, data_frame_to_list, series_to_list
+from ..decorators import command
+from ..utils import count_specified, compact, data_frame_to_list, series_to_list
 
 
-@handle_errors
-@with_output
+@command
 def history(
     ticker: TickerType,
     interval: IntervalType = default_interval,
-    period: Annotated[
-        str | None,
-        typer.Option(
-            callback=lambda x: validate_period(x) if x else None,
-            help=f"Data period {', '.join(VALID_PERIODS)}",
-        ),
-    ] = None,
-    start: Annotated[
-        str | None,
-        typer.Option(
-            callback=lambda x: validate_date_string(x) if x else None,
-            help="Start date (YYYY-MM-DD)",
-        ),
-    ] = None,
-    end: Annotated[
-        str | None,
-        typer.Option(
-            callback=lambda x: validate_date_string(x) if x else None,
-            help="End date (YYYY-MM-DD)",
-        ),
-    ] = None,
+    period: PeriodTypeOptional = None,
+    start: StartDateTypeOptional = None,
+    end: EndDateTypeOptional = None,
 ):
     """
     Get historical market data for a stock ticker.
@@ -56,30 +40,22 @@ def history(
     if specified_count == 0:
         period = "1mo"
 
-    kwargs = {"interval": interval}
-    if period is not None:
-        kwargs["period"] = period
-    if start is not None:
-        kwargs["start"] = start
-    if end is not None:
-        kwargs["end"] = end
+    kwargs = compact(
+        interval=interval,
+        period=period,
+        start=start,
+        end=end,
+    )
 
     stock = yf.Ticker(ticker)
     data_frame = stock.history(**kwargs)
     return data_frame_to_list(data_frame)
 
 
-@handle_errors
-@with_output
+@command
 def dividends(
     ticker: TickerType,
-    period: Annotated[
-        str,
-        typer.Option(
-            callback=validate_period,
-            help=f"Data period {', '.join(VALID_PERIODS)}",
-        ),
-    ] = "max",
+    period: PeriodType = default_period,
 ):
     """
     Get dividends for a stock ticker.
@@ -89,8 +65,7 @@ def dividends(
     return series_to_list(series)
 
 
-@handle_errors
-@with_output
+@command
 def fast_info(
     ticker: TickerType,
 ):
@@ -107,8 +82,7 @@ def fast_info(
     return fast_info_dict
 
 
-@handle_errors
-@with_output
+@command
 def news(
     ticker: TickerType,
     count: CountType = default_count,

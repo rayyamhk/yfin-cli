@@ -1,8 +1,11 @@
 import typer
-from datetime import datetime
 from typing import Annotated
-from .validator import validate_date_string
-from .utils import increment_datetime_by_days, format_datetime, raise_exception
+from .utils import (
+    get_today_date_string,
+    get_seven_days_from_today_date_string,
+    validate_date_string,
+    validate_value_in_list,
+)
 
 TickerType = Annotated[
     str,
@@ -18,62 +21,81 @@ default_output = VALID_OUTPUT_TYPES[0]
 OutputType = Annotated[
     str,
     typer.Option(
-        callback=lambda x: (
-            x
-            if x in VALID_OUTPUT_TYPES
-            else raise_exception(typer.BadParameter(f"Invalid output type: {x}"))
-        ),
+        callback=validate_value_in_list(VALID_OUTPUT_TYPES),
         help=f"Output format ({', '.join(VALID_OUTPUT_TYPES)})",
     ),
 ]
 
-VALID_FREQUENCIES = ["yearly", "quarterly"]
-
-default_frequency = VALID_FREQUENCIES[0]
+default_frequency = "yearly"
 
 FrequencyType = Annotated[
     str,
     typer.Option(
-        callback=lambda x: (
-            x
-            if x in VALID_FREQUENCIES
-            else raise_exception(typer.BadParameter(f"Invalid frequency: {x}"))
-        ),
-        help=f"Frequency of the data ({', '.join(VALID_FREQUENCIES)})",
+        callback=validate_value_in_list(["yearly", "quarterly"]),
+        help="Frequency of the data (yearly, quarterly)",
     ),
 ]
-
-VALID_EXTENDED_FREQUENCIES = ["yearly", "quarterly", "trailing"]
 
 ExtendedFrequencyType = Annotated[
     str,
     typer.Option(
-        callback=lambda x: (
-            x
-            if x in VALID_EXTENDED_FREQUENCIES
-            else raise_exception(typer.BadParameter(f"Invalid frequency: {x}"))
-        ),
-        help=f"Frequency of the data ({', '.join(VALID_EXTENDED_FREQUENCIES)})",
+        callback=validate_value_in_list(["yearly", "quarterly", "trailing"]),
+        help="Frequency of the data (yearly, quarterly, trailing)",
     ),
 ]
 
 StartDateType = Annotated[
     str,
     typer.Option(
-        default_factory=lambda: format_datetime(datetime.now()),
+        default_factory=get_today_date_string,
         callback=validate_date_string,
         help="Start date (YYYY-MM-DD), default today",
+    ),
+]
+
+StartDateTypeOptional = Annotated[
+    str | None,
+    typer.Option(
+        callback=lambda x: validate_date_string(x) if x else None,
+        help="Start date (YYYY-MM-DD)",
     ),
 ]
 
 EndDateType = Annotated[
     str,
     typer.Option(
-        default_factory=lambda: format_datetime(
-            increment_datetime_by_days(datetime.now(), 7)
-        ),
+        default_factory=get_seven_days_from_today_date_string,
         callback=validate_date_string,
         help="End date (YYYY-MM-DD), default 7 days from start",
+    ),
+]
+
+EndDateTypeOptional = Annotated[
+    str | None,
+    typer.Option(
+        callback=lambda x: validate_date_string(x) if x else None,
+        help="End date (YYYY-MM-DD)",
+    ),
+]
+
+VALID_PERIODS = ["1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max"]
+
+default_period = VALID_PERIODS[-1]  # max
+
+
+PeriodType = Annotated[
+    str,
+    typer.Option(
+        callback=validate_value_in_list(VALID_PERIODS),
+        help=f"Data period {', '.join(VALID_PERIODS)}",
+    ),
+]
+
+PeriodTypeOptional = Annotated[
+    str | None,
+    typer.Option(
+        callback=lambda x: validate_value_in_list(VALID_PERIODS)(x) if x else None,
+        help=f"Data period {', '.join(VALID_PERIODS)}",
     ),
 ]
 
@@ -104,8 +126,6 @@ MarketCapType = Annotated[
     ),
 ]
 
-default_interval = "1d"
-
 VALID_INTERVALS = [
     "1m",
     "2m",
@@ -122,14 +142,12 @@ VALID_INTERVALS = [
     "3mo",
 ]
 
+default_interval = VALID_INTERVALS[8]  # "1d"
+
 IntervalType = Annotated[
     str,
     typer.Option(
-        callback=lambda x: (
-            x
-            if x in VALID_INTERVALS
-            else raise_exception(typer.BadParameter(f"Invalid interval: {x}"))
-        ),
+        callback=validate_value_in_list(VALID_INTERVALS),
         help=f"Data interval ({', '.join(VALID_INTERVALS)})",
     ),
 ]
@@ -143,19 +161,13 @@ CountType = Annotated[
     ),
 ]
 
-VALID_NEWS_TABS = ["all", "news", "press releases"]
-
-default_news_tab = VALID_NEWS_TABS[0]
+default_news_tab = "all"
 
 NewsTabType = Annotated[
     str,
     typer.Option(
-        callback=lambda x: (
-            x
-            if x in VALID_NEWS_TABS
-            else raise_exception(typer.BadParameter(f"Invalid news tab: {x}"))
-        ),
-        help=f"Tab of the news ({', '.join(VALID_NEWS_TABS)})",
+        callback=validate_value_in_list(["all", "news", "press releases"]),
+        help="Tab of the news (all, news, press releases)",
     ),
 ]
 
@@ -173,7 +185,7 @@ IndustryKeyType = Annotated[
     ),
 ]
 
-ScreenFilterType = Annotated[
+ScreenFilterTypeOptional = Annotated[
     list[str] | None,
     typer.Option(
         "--filter",  # parameter name is plural
@@ -181,14 +193,14 @@ ScreenFilterType = Annotated[
     ),
 ]
 
-ScreenPredefinedQueryType = Annotated[
+ScreenPredefinedQueryTypeOptional = Annotated[
     str | None,
     typer.Option(
         help="Predefined query, can be found using `yfin screen-predefined-queries`",
     ),
 ]
 
-ScreenJsonQueryType = Annotated[
+ScreenJsonQueryTypeOptional = Annotated[
     str | None,
     typer.Option(
         help="Complex query in JSON format: {'operator': 'and|or', 'queries': [<filter1>, <filter2>, <json_query>, ...]}.",
@@ -205,13 +217,9 @@ ScreenQueryFieldType = Annotated[
 default_sort_order = "desc"
 
 ScreenSortOrderType = Annotated[
-    str | None,
+    str,
     typer.Option(
-        callback=lambda x: (
-            x
-            if x in ["asc", "desc"]
-            else raise_exception(typer.BadParameter(f"Invalid sort order: {x}"))
-        ),
+        callback=validate_value_in_list(["asc", "desc"]),
         help="Sort order, can be 'asc' or 'desc'",
     ),
 ]

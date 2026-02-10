@@ -10,11 +10,10 @@ from ..typer import (
     default_limit,
 )
 from ..utils import data_frame_to_list
-from ..decorators import handle_errors, with_output
+from ..decorators import command
 
 
-@handle_errors
-@with_output
+@command
 def income_stmt(
     ticker: TickerType,
     frequency: ExtendedFrequencyType = default_frequency,
@@ -29,8 +28,7 @@ def income_stmt(
     return data_frame_to_list(data_frame.T, index_name="Date")
 
 
-@handle_errors
-@with_output
+@command
 def balance_sheet(
     ticker: TickerType,
     frequency: FrequencyType = default_frequency,
@@ -45,8 +43,7 @@ def balance_sheet(
     return data_frame_to_list(data_frame.T, index_name="Date")
 
 
-@handle_errors
-@with_output
+@command
 def cashflow(
     ticker: TickerType,
     frequency: ExtendedFrequencyType = default_frequency,
@@ -61,8 +58,7 @@ def cashflow(
     return data_frame_to_list(data_frame.T, index_name="Date")
 
 
-@handle_errors
-@with_output
+@command
 def earnings_dates(
     ticker: TickerType,
     limit: LimitType = default_limit,
@@ -76,8 +72,7 @@ def earnings_dates(
     return data_frame_to_list(data_frame)
 
 
-@handle_errors
-@with_output
+@command
 def sec_filings(
     ticker: TickerType,
 ):

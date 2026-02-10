@@ -1,11 +1,11 @@
 import yfinance as yf
 import typer
 import json
-from ..decorators import handle_errors, with_output
+from ..decorators import command
 from ..typer import (
-    ScreenFilterType,
-    ScreenPredefinedQueryType,
-    ScreenJsonQueryType,
+    ScreenFilterTypeOptional,
+    ScreenPredefinedQueryTypeOptional,
+    ScreenJsonQueryTypeOptional,
     OffsetType,
     default_offset,
     LimitType,
@@ -36,15 +36,13 @@ VALID_OPERATORS = {
 }
 
 
-@handle_errors
-@with_output
+@command
 def screen_query_fields():
     """Get a list of all valid fields for screening."""
     return [{"field": f} for f in sorted(list(VALID_FIELDS))]
 
 
-@handle_errors
-@with_output
+@command
 def screen_query_values(field: ScreenQueryFieldType):
     """Get a list of all valid values for a field."""
     if field == "region":
@@ -58,13 +56,16 @@ def screen_query_values(field: ScreenQueryFieldType):
     elif field == "peer_group":
         values = list(VALID_PEER_GROUPS)
     else:
-        values = []
+        validate_field(field)
+        values = None
+
+    if values is None:
+        return None
 
     return [{"value": v} for v in sorted(values)]
 
 
-@handle_errors
-@with_output
+@command
 def screen_predefined_queries():
     """Get a list of all valid predefined queries."""
     return [{"query": q} for q in sorted(list(PREDEFINED_QUERIES))]
@@ -199,12 +200,11 @@ def parse_json_query(json_query: str) -> yf.EquityQuery:
     return _build_query(query_node)
 
 
-@handle_errors
-@with_output
+@command
 def screen(
-    filters: ScreenFilterType = None,
-    predefined: ScreenPredefinedQueryType = None,
-    json_query: ScreenJsonQueryType = None,
+    filters: ScreenFilterTypeOptional = None,
+    predefined: ScreenPredefinedQueryTypeOptional = None,
+    json_query: ScreenJsonQueryTypeOptional = None,
     offset: OffsetType = default_offset,
     limit: LimitType = default_limit,
     sort_field: ScreenQueryFieldType = None,

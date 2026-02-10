@@ -1,9 +1,8 @@
 import yfinance as yf
-from ..decorators import handle_errors, with_output
+from ..decorators import command
 
 
-@handle_errors
-@with_output
+@command
 def market_status():
     """
     Get the US market status.

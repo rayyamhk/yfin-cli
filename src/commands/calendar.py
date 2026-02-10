@@ -9,12 +9,11 @@ from ..typer import (
     MarketCapType,
     default_market_cap,
 )
-from ..decorators import handle_errors, with_output
-from ..utils import data_frame_to_list
+from ..decorators import command
+from ..utils import compact, data_frame_to_list
 
 
-@handle_errors
-@with_output
+@command
 def calendar_earnings(
     start: StartDateType,
     end: EndDateType,
@@ -25,21 +24,20 @@ def calendar_earnings(
     """
     Get earnings calendar.
     """
-    kwargs = {"limit": limit, "offset": offset}
-    if start:
-        kwargs["start"] = start
-    if end:
-        kwargs["end"] = end
-    if market_cap:
-        kwargs["market_cap"] = market_cap
+    kwargs = compact(
+        limit=limit,
+        offset=offset,
+        start=start,
+        end=end,
+        market_cap=market_cap,
+    )
 
     calendars = yf.Calendars()
     data_frame = calendars.get_earnings_calendar(**kwargs)
     return data_frame_to_list(data_frame)
 
 
-@handle_errors
-@with_output
+@command
 def calendar_economic_events(
     start: StartDateType,
     end: EndDateType,
@@ -49,19 +47,19 @@ def calendar_economic_events(
     """
     Get economic events calendar.
     """
-    kwargs = {"limit": limit, "offset": offset}
-    if start:
-        kwargs["start"] = start
-    if end:
-        kwargs["end"] = end
+    kwargs = compact(
+        limit=limit,
+        offset=offset,
+        start=start,
+        end=end,
+    )
 
     calendars = yf.Calendars()
     data_frame = calendars.get_economic_events_calendar(**kwargs)
     return data_frame_to_list(data_frame)
 
 
-@handle_errors
-@with_output
+@command
 def calendar_ipo(
     start: StartDateType,
     end: EndDateType,
@@ -71,11 +69,12 @@ def calendar_ipo(
     """
     Get IPO calendar.
     """
-    kwargs = {"limit": limit, "offset": offset}
-    if start:
-        kwargs["start"] = start
-    if end:
-        kwargs["end"] = end
+    kwargs = compact(
+        limit=limit,
+        offset=offset,
+        start=start,
+        end=end,
+    )
 
     calendars = yf.Calendars()
     data_frame = calendars.get_ipo_info_calendar(**kwargs)
