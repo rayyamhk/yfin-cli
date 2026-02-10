@@ -93,23 +93,23 @@ def parse_value(field: str, value: str) -> str | float:
 
         if field == "region" and value not in VALID_REGIONS:
             raise typer.BadParameter(
-                f"Invalid value: '{value}' for 'region' field. Valid values can be found using `yfin screen-query-values region`."
+                f"Invalid value: '{value}' for 'region' field. Valid values can be found using `yfin screen-query-values --field region`."
             )
         elif field == "exchange" and value not in VALID_EXCHANGES:
             raise typer.BadParameter(
-                f"Invalid value: '{value}' for 'exchange' field. Valid values can be found using `yfin screen-query-values exchange`."
+                f"Invalid value: '{value}' for 'exchange' field. Valid values can be found using `yfin screen-query-values --field exchange`."
             )
         elif field == "sector" and value not in VALID_SECTORS:
             raise typer.BadParameter(
-                f"Invalid value: '{value}' for 'sector' field. Valid values can be found using `yfin screen-query-values sector`."
+                f"Invalid value: '{value}' for 'sector' field. Valid values can be found using `yfin screen-query-values --field sector`."
             )
         elif field == "industry" and value not in VALID_INDUSTRIES:
             raise typer.BadParameter(
-                f"Invalid value: '{value}' for 'industry' field. Valid values can be found using `yfin screen-query-values industry`."
+                f"Invalid value: '{value}' for 'industry' field. Valid values can be found using `yfin screen-query-values --field industry`."
             )
         elif field == "peer_group" and value not in VALID_PEER_GROUPS:
             raise typer.BadParameter(
-                f"Invalid value: '{value}' for 'peer_group' field. Valid values can be found using `yfin screen-query-values peer_group`."
+                f"Invalid value: '{value}' for 'peer_group' field. Valid values can be found using `yfin screen-query-values --field peer_group`."
             )
         return value
 

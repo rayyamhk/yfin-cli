@@ -12,17 +12,17 @@ def command(func):
     def wrapper(*args, **kwargs):
         try:
             data = func(*args, **kwargs)
-            ctx = click.get_current_context()
-            output_type = ctx.obj.get("output")
-            writer = WriterFactory.get_writer(output_type)
 
             if data is None:
                 console_print_warning("No data found")
                 raise typer.Exit(code=1)
 
             if not isinstance(data, (dict, list)):
-                raise ValueError(f"Unsupported data type: {type(data)}")
+                raise ValueError(f"Unsupported data type: {type(data).__name__}")
 
+            ctx = click.get_current_context()
+            output_type = ctx.obj.get("output")
+            writer = WriterFactory.get_writer(output_type)
             writer.write(data)
         except (typer.Exit, typer.Abort, typer.BadParameter):
             raise

@@ -36,7 +36,16 @@ def test_parse_filter_valid_eq(filter_str):
         "exchange is-in NYQ,NMS,CXI",
         "exchange is-in NYQ,    NMS ,   CXI ",
     ],
-    ids=["gt", "gte", "lt", "lte", "btwn", "btwn_whitespace", "is_in", "is_in_whitespace"],
+    ids=[
+        "gt",
+        "gte",
+        "lt",
+        "lte",
+        "btwn",
+        "btwn_whitespace",
+        "is_in",
+        "is_in_whitespace",
+    ],
 )
 def test_parse_filter_valid_operators(filter_str):
     result = parse_filter(filter_str)
@@ -145,6 +154,7 @@ def test_screen_query_values_field_with_no_fixed_values(invoke):
     result = invoke("screen-query-values", "--field", "invalid_field")
     assert result.exit_code == 2
     assert "Invalid field" in result.output
+
 
 def test_screen_query_values_valid_field_with_fixed_values(invoke):
     result = invoke("screen-query-values", "--field", "sector")
