@@ -70,7 +70,7 @@ def validate_value_in_list(valid_values: list[str]) -> Callable[[str], str]:
     def _validator(x: str) -> str:
         if x in valid_values:
             return x
-        raise typer.BadParameter(f"Invalid value: {x}")
+        raise typer.BadParameter(f"Invalid value: {x}, should be one of {', '.join(valid_values)}")
 
     return _validator
 

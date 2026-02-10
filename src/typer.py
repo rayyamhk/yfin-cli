@@ -14,7 +14,7 @@ TickerType = Annotated[
     ),
 ]
 
-VALID_OUTPUT_TYPES = ["json"]
+VALID_OUTPUT_TYPES = ["json", "table"]
 
 default_output = VALID_OUTPUT_TYPES[0]
 
