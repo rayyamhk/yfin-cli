@@ -1,6 +1,5 @@
 """Tests for the calendar-ipo command."""
 
-import json
 import pandas as pd
 from unittest.mock import patch
 
@@ -26,7 +25,9 @@ def create_mock_ipo_data():
 
 @patch("src.commands.calendar.yf.Calendars")
 def test_calendar_ipo_basic(mock_calendars, invoke_json):
-    mock_calendars.return_value.get_ipo_info_calendar.return_value = create_mock_ipo_data()
+    mock_calendars.return_value.get_ipo_info_calendar.return_value = (
+        create_mock_ipo_data()
+    )
     code, data = invoke_json("calendar-ipo")
 
     assert code == 0
@@ -37,7 +38,9 @@ def test_calendar_ipo_basic(mock_calendars, invoke_json):
 
 @patch("src.commands.calendar.yf.Calendars")
 def test_calendar_ipo_with_options(mock_calendars, invoke_json):
-    mock_calendars.return_value.get_ipo_info_calendar.return_value = create_mock_ipo_data()
+    mock_calendars.return_value.get_ipo_info_calendar.return_value = (
+        create_mock_ipo_data()
+    )
     code, _ = invoke_json("calendar-ipo", "--limit", "5", "--start", "2026-02-01")
 
     assert code == 0
@@ -72,7 +75,9 @@ def test_calendar_ipo_invalid_date(invoke):
 
 @patch("src.commands.calendar.yf.Calendars")
 def test_calendar_ipo_api_error(mock_calendars, invoke):
-    mock_calendars.return_value.get_ipo_info_calendar.side_effect = Exception("API Error")
+    mock_calendars.return_value.get_ipo_info_calendar.side_effect = Exception(
+        "API Error"
+    )
     result = invoke("calendar-ipo")
 
     assert result.exit_code == 1

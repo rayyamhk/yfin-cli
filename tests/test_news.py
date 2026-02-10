@@ -1,6 +1,5 @@
 """Tests for the news command."""
 
-import json
 from unittest.mock import patch
 
 

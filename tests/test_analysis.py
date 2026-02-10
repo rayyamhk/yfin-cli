@@ -1,6 +1,5 @@
 """Tests for analysis commands (recommendations, estimates, holders, etc.)."""
 
-import json
 import pandas as pd
 import pytest
 from unittest.mock import patch
@@ -117,7 +116,9 @@ MOCK_INSIDER_PURCHASES = create_mock_df(
     ],
 )
 @patch("src.commands.analysis.yf.Ticker")
-def test_analysis_df_command_basic(mock_ticker, invoke_json, command, mock_method, mock_data):
+def test_analysis_df_command_basic(
+    mock_ticker, invoke_json, command, mock_method, mock_data
+):
     """Test that each DataFrame-based analysis command returns valid JSON."""
     setattr(mock_ticker.return_value, mock_method, lambda: mock_data)
     code, data = invoke_json(command, "AAPL")
@@ -206,7 +207,11 @@ def test_analysis_df_command_none_data(mock_ticker, invoke, command, mock_method
 @patch("src.commands.analysis.yf.Ticker")
 def test_analysis_df_command_api_error(mock_ticker, invoke, command, mock_method):
     """Test that each DataFrame-based analysis command handles API errors."""
-    setattr(mock_ticker.return_value, mock_method, lambda: (_ for _ in ()).throw(Exception("API Error")))
+    setattr(
+        mock_ticker.return_value,
+        mock_method,
+        lambda: (_ for _ in ()).throw(Exception("API Error")),
+    )
     result = invoke(command, "AAPL")
 
     assert result.exit_code == 1
@@ -238,7 +243,9 @@ def test_price_targets_none_data(mock_ticker, invoke):
 
 @patch("src.commands.analysis.yf.Ticker")
 def test_price_targets_api_error(mock_ticker, invoke):
-    mock_ticker.return_value.get_analyst_price_targets.side_effect = Exception("API Error")
+    mock_ticker.return_value.get_analyst_price_targets.side_effect = Exception(
+        "API Error"
+    )
     result = invoke("price-targets", "AAPL")
 
     assert result.exit_code == 1

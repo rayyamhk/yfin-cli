@@ -1,9 +1,7 @@
 """Tests for the income-stmt command."""
 
-import json
 import pandas as pd
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 
 def create_mock_income_data(freq="yearly"):
@@ -37,17 +35,23 @@ def test_income_stmt_basic(mock_ticker, invoke_json):
     assert len(data) == 3
     assert data[0]["TotalRevenue"] == 1000.0
     assert data[0]["NetIncome"] == 500.0
-    mock_ticker.return_value.get_income_stmt.assert_called_with(pretty=True, freq="yearly")
+    mock_ticker.return_value.get_income_stmt.assert_called_with(
+        pretty=True, freq="yearly"
+    )
 
 
 @patch("src.commands.financials.yf.Ticker")
 def test_income_stmt_quarterly(mock_ticker, invoke_json):
-    mock_ticker.return_value.get_income_stmt.return_value = create_mock_income_data("quarterly")
+    mock_ticker.return_value.get_income_stmt.return_value = create_mock_income_data(
+        "quarterly"
+    )
     code, data = invoke_json("income-stmt", "AAPL", "--frequency", "quarterly")
 
     assert code == 0
     assert "2025-12-31" in data[0]["Date"]
-    mock_ticker.return_value.get_income_stmt.assert_called_with(pretty=True, freq="quarterly")
+    mock_ticker.return_value.get_income_stmt.assert_called_with(
+        pretty=True, freq="quarterly"
+    )
 
 
 def test_income_stmt_invalid_frequency(invoke):

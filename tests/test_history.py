@@ -1,6 +1,5 @@
 """Tests for the history command."""
 
-import json
 import pandas as pd
 import pytest
 from unittest.mock import patch
@@ -52,7 +51,9 @@ def test_history_with_period(mock_ticker, invoke_json):
 @patch("src.commands.stock.yf.Ticker")
 def test_history_with_start_end(mock_ticker, invoke_json):
     mock_ticker.return_value.history.return_value = create_mock_history_data()
-    code, _ = invoke_json("history", "TSLA", "--start", "2026-01-01", "--end", "2026-02-01")
+    code, _ = invoke_json(
+        "history", "TSLA", "--start", "2026-01-01", "--end", "2026-02-01"
+    )
 
     assert code == 0
     call_kwargs = mock_ticker.return_value.history.call_args[1]
@@ -87,10 +88,14 @@ def test_history_invalid_input(invoke, args, error_fragment):
 
 def test_history_too_many_time_options(invoke):
     result = invoke(
-        "history", "TSLA",
-        "--period", "1mo",
-        "--start", "2026-01-01",
-        "--end", "2026-02-01",
+        "history",
+        "TSLA",
+        "--period",
+        "1mo",
+        "--start",
+        "2026-01-01",
+        "--end",
+        "2026-02-01",
     )
     assert result.exit_code != 0
 

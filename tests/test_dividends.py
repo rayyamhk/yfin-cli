@@ -1,6 +1,5 @@
 """Tests for the dividends command."""
 
-import json
 import pandas as pd
 from unittest.mock import patch
 

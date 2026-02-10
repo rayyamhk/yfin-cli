@@ -1,9 +1,7 @@
 """Tests for the cashflow command."""
 
-import json
 import pandas as pd
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 
 def create_mock_cashflow_data(freq="yearly"):
@@ -44,21 +42,29 @@ def test_cashflow_basic(mock_ticker, invoke_json):
 
 @patch("src.commands.financials.yf.Ticker")
 def test_cashflow_quarterly(mock_ticker, invoke_json):
-    mock_ticker.return_value.get_cashflow.return_value = create_mock_cashflow_data("quarterly")
+    mock_ticker.return_value.get_cashflow.return_value = create_mock_cashflow_data(
+        "quarterly"
+    )
     code, data = invoke_json("cashflow", "MSFT", "--frequency", "quarterly")
 
     assert code == 0
     assert "2025-03-31" in data[1]["Date"]
-    mock_ticker.return_value.get_cashflow.assert_called_with(pretty=True, freq="quarterly")
+    mock_ticker.return_value.get_cashflow.assert_called_with(
+        pretty=True, freq="quarterly"
+    )
 
 
 @patch("src.commands.financials.yf.Ticker")
 def test_cashflow_trailing(mock_ticker, invoke_json):
-    mock_ticker.return_value.get_cashflow.return_value = create_mock_cashflow_data("trailing")
+    mock_ticker.return_value.get_cashflow.return_value = create_mock_cashflow_data(
+        "trailing"
+    )
     code, data = invoke_json("cashflow", "MSFT", "--frequency", "trailing")
 
     assert code == 0
-    mock_ticker.return_value.get_cashflow.assert_called_with(pretty=True, freq="trailing")
+    mock_ticker.return_value.get_cashflow.assert_called_with(
+        pretty=True, freq="trailing"
+    )
 
 
 def test_cashflow_invalid_frequency(invoke):

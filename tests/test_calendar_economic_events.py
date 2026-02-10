@@ -1,6 +1,5 @@
 """Tests for the calendar-economic-events command."""
 
-import json
 import pandas as pd
 from unittest.mock import patch
 
@@ -24,7 +23,9 @@ def create_mock_economic_data():
 
 @patch("src.commands.calendar.yf.Calendars")
 def test_economic_events_basic(mock_calendars, invoke_json):
-    mock_calendars.return_value.get_economic_events_calendar.return_value = create_mock_economic_data()
+    mock_calendars.return_value.get_economic_events_calendar.return_value = (
+        create_mock_economic_data()
+    )
     code, data = invoke_json("calendar-economic-events")
 
     assert code == 0
@@ -36,8 +37,12 @@ def test_economic_events_basic(mock_calendars, invoke_json):
 
 @patch("src.commands.calendar.yf.Calendars")
 def test_economic_events_with_options(mock_calendars, invoke_json):
-    mock_calendars.return_value.get_economic_events_calendar.return_value = create_mock_economic_data()
-    code, _ = invoke_json("calendar-economic-events", "--limit", "5", "--start", "2026-02-01")
+    mock_calendars.return_value.get_economic_events_calendar.return_value = (
+        create_mock_economic_data()
+    )
+    code, _ = invoke_json(
+        "calendar-economic-events", "--limit", "5", "--start", "2026-02-01"
+    )
 
     assert code == 0
     call_kwargs = mock_calendars.return_value.get_economic_events_calendar.call_args[1]
@@ -47,7 +52,9 @@ def test_economic_events_with_options(mock_calendars, invoke_json):
 
 @patch("src.commands.calendar.yf.Calendars")
 def test_economic_events_empty_data(mock_calendars, invoke_json):
-    mock_calendars.return_value.get_economic_events_calendar.return_value = pd.DataFrame()
+    mock_calendars.return_value.get_economic_events_calendar.return_value = (
+        pd.DataFrame()
+    )
     code, data = invoke_json("calendar-economic-events")
 
     assert code == 0
@@ -71,7 +78,9 @@ def test_economic_events_invalid_date(invoke):
 
 @patch("src.commands.calendar.yf.Calendars")
 def test_economic_events_api_error(mock_calendars, invoke):
-    mock_calendars.return_value.get_economic_events_calendar.side_effect = Exception("API Error")
+    mock_calendars.return_value.get_economic_events_calendar.side_effect = Exception(
+        "API Error"
+    )
     result = invoke("calendar-economic-events")
 
     assert result.exit_code == 1

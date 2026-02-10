@@ -1,8 +1,7 @@
 """Tests for the earnings-dates command."""
 
-import json
 import pandas as pd
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 
 def create_mock_earnings_dates_data():
@@ -21,7 +20,9 @@ def create_mock_earnings_dates_data():
 
 @patch("src.commands.financials.yf.Ticker")
 def test_earnings_dates_basic(mock_ticker, invoke_json):
-    mock_ticker.return_value.get_earnings_dates.return_value = create_mock_earnings_dates_data()
+    mock_ticker.return_value.get_earnings_dates.return_value = (
+        create_mock_earnings_dates_data()
+    )
     code, data = invoke_json("earnings-dates", "MSFT")
 
     assert code == 0
@@ -33,11 +34,15 @@ def test_earnings_dates_basic(mock_ticker, invoke_json):
 
 @patch("src.commands.financials.yf.Ticker")
 def test_earnings_dates_with_options(mock_ticker, invoke_json):
-    mock_ticker.return_value.get_earnings_dates.return_value = create_mock_earnings_dates_data()
+    mock_ticker.return_value.get_earnings_dates.return_value = (
+        create_mock_earnings_dates_data()
+    )
     code, _ = invoke_json("earnings-dates", "MSFT", "--limit", "5", "--offset", "10")
 
     assert code == 0
-    mock_ticker.return_value.get_earnings_dates.assert_called_once_with(limit=5, offset=10)
+    mock_ticker.return_value.get_earnings_dates.assert_called_once_with(
+        limit=5, offset=10
+    )
 
 
 @patch("src.commands.financials.yf.Ticker")

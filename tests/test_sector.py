@@ -1,9 +1,7 @@
 """Tests for sector commands."""
 
-import json
 import pandas as pd
-import pytest
-from unittest.mock import patch, PropertyMock
+from unittest.mock import patch
 
 
 MOCK_INDUSTRIES = pd.DataFrame(
@@ -17,8 +15,16 @@ MOCK_OVERVIEW = {
 }
 
 MOCK_RESEARCH_REPORTS = [
-    {"reportTitle": "Tech Outlook 2026", "provider": "Argus", "reportDate": "2026-02-01"},
-    {"reportTitle": "Sector Review", "provider": "Morningstar", "reportDate": "2026-01-15"},
+    {
+        "reportTitle": "Tech Outlook 2026",
+        "provider": "Argus",
+        "reportDate": "2026-02-01",
+    },
+    {
+        "reportTitle": "Sector Review",
+        "provider": "Morningstar",
+        "reportDate": "2026-01-15",
+    },
 ]
 
 MOCK_TOP_COMPANIES = pd.DataFrame(
@@ -29,7 +35,10 @@ MOCK_TOP_COMPANIES = pd.DataFrame(
     index=["AAPL", "MSFT"],
 )
 
-MOCK_TOP_ETFS = {"XLK": "Technology Select Sector SPDR", "VGT": "Vanguard Information Technology"}
+MOCK_TOP_ETFS = {
+    "XLK": "Technology Select Sector SPDR",
+    "VGT": "Vanguard Information Technology",
+}
 MOCK_TOP_MUTUAL_FUNDS = {"FTEC": "Fidelity MSCI IT", "VITAX": "Vanguard IT Admiral"}
 
 

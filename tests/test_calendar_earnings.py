@@ -1,6 +1,5 @@
 """Tests for the calendar-earnings command."""
 
-import json
 import pandas as pd
 from unittest.mock import patch
 
@@ -25,7 +24,9 @@ def create_mock_earnings_data():
 
 @patch("src.commands.calendar.yf.Calendars")
 def test_calendar_earnings_basic(mock_calendars, invoke_json):
-    mock_calendars.return_value.get_earnings_calendar.return_value = create_mock_earnings_data()
+    mock_calendars.return_value.get_earnings_calendar.return_value = (
+        create_mock_earnings_data()
+    )
     code, data = invoke_json("calendar-earnings")
 
     assert code == 0
@@ -36,7 +37,9 @@ def test_calendar_earnings_basic(mock_calendars, invoke_json):
 
 @patch("src.commands.calendar.yf.Calendars")
 def test_calendar_earnings_with_options(mock_calendars, invoke_json):
-    mock_calendars.return_value.get_earnings_calendar.return_value = create_mock_earnings_data()
+    mock_calendars.return_value.get_earnings_calendar.return_value = (
+        create_mock_earnings_data()
+    )
     code, _ = invoke_json("calendar-earnings", "--limit", "5", "--start", "2026-02-01")
 
     assert code == 0
@@ -71,7 +74,9 @@ def test_calendar_earnings_invalid_date(invoke):
 
 @patch("src.commands.calendar.yf.Calendars")
 def test_calendar_earnings_api_error(mock_calendars, invoke):
-    mock_calendars.return_value.get_earnings_calendar.side_effect = Exception("API Error")
+    mock_calendars.return_value.get_earnings_calendar.side_effect = Exception(
+        "API Error"
+    )
     result = invoke("calendar-earnings")
 
     assert result.exit_code == 1

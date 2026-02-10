@@ -1,6 +1,5 @@
 """Tests for the fast-info command."""
 
-import json
 from unittest.mock import patch
 
 

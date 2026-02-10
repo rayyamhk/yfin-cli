@@ -1,8 +1,6 @@
 """Tests for industry commands."""
 
-import json
 import pandas as pd
-import pytest
 from unittest.mock import patch
 
 
@@ -13,7 +11,11 @@ MOCK_OVERVIEW = {
 }
 
 MOCK_RESEARCH_REPORTS = [
-    {"reportTitle": "Software Outlook", "provider": "Argus", "reportDate": "2026-02-01"},
+    {
+        "reportTitle": "Software Outlook",
+        "provider": "Argus",
+        "reportDate": "2026-02-01",
+    },
 ]
 
 MOCK_TOP_COMPANIES = pd.DataFrame(
@@ -142,7 +144,9 @@ def test_industry_top_growth_companies_none_data(mock_industry, invoke):
 @patch("src.commands.industry.yf.Industry")
 def test_industry_top_performing_companies_basic(mock_industry, invoke_json):
     mock_industry.return_value.top_performing_companies = MOCK_PERFORMING_COMPANIES
-    code, data = invoke_json("industry-top-performing-companies", "software-infrastructure")
+    code, data = invoke_json(
+        "industry-top-performing-companies", "software-infrastructure"
+    )
 
     assert code == 0
     assert len(data) == 2

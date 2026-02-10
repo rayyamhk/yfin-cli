@@ -13,8 +13,8 @@ from src.commands.screen import parse_filter, parse_json_query
     "filter_str",
     [
         "sector eq Technology",
-        "SECTOR eq Technology",       # case-insensitive field
-        "sector EQ Technology",       # case-insensitive operator
+        "SECTOR eq Technology",  # case-insensitive field
+        "sector EQ Technology",  # case-insensitive operator
         "  sector   eq   Technology  ",  # extra whitespace
     ],
     ids=["basic_eq", "case_field", "case_operator", "whitespace"],
@@ -85,7 +85,7 @@ def test_parse_json_query_valid(json_str):
 
 
 def test_parse_json_query_nested():
-    json_str = '''{
+    json_str = """{
         "operator": "and",
         "queries": [
             "beta gt 1",
@@ -94,7 +94,7 @@ def test_parse_json_query_nested():
                 "queries": ["sector eq Technology", "sector eq Healthcare"]
             }
         ]
-    }'''
+    }"""
     result = parse_json_query(json_str)
     assert isinstance(result, yf.EquityQuery)
 
@@ -105,7 +105,10 @@ def test_parse_json_query_nested():
         ("not valid json", "Invalid JSON query"),
         ('{"queries": ["sector eq Technology"]}', "'operator' is required"),
         ('{"operator": "and"}', "'queries' is required"),
-        ('{"operator": "xor", "queries": ["sector eq Technology"]}', "'operator' must be either 'and' or 'or'"),
+        (
+            '{"operator": "xor", "queries": ["sector eq Technology"]}',
+            "'operator' must be either 'and' or 'or'",
+        ),
         ('{"operator": "and", "queries": []}', "'queries' must be a non-empty list"),
         ("123", "unexpected type"),
         ('{"operator": "and", "queries": ["invalidField eq value"]}', "Invalid field"),
