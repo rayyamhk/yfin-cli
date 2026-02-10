@@ -853,9 +853,7 @@ yfin screen --filter "sector eq Technology" --filter "region eq us"
 yfin screen --predefined most_actives
 
 # Complex JSON query (AND/OR logic)
-```bash
 yfin screen --json-query '{"operator": "and", "queries": [{"operator": "or", "queries": ["sector eq Technology", "sector eq Healthcare"]}, "region eq us"]}'
-```
 
 # Sort by market cap, ascending
 yfin screen --filter "region eq us" --sort-field "intradaymarketcap" --sort-order asc
