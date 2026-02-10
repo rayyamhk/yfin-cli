@@ -72,60 +72,38 @@ yfin [OPTIONS] COMMAND [ARGS]...
 
 | Option | Description | Default |
 |--------|-------------|---------|
-| `--output` | Output format (`table`) | `table` |
-| `--help` | Show help message | - |
+| `--output` | Output format (`json`, `table`) | `json` |
+| `--help` | Show help message | — |
 
-### Examples
+### Quick Examples
 
-**Get historical data:**
 ```bash
-yfin history AAPL --period 1mo --interval 1d
-```
+# Get historical stock data
+yfin history AAPL
 
-**View income statement (quarterly):**
-```bash
+# Get quick summary metrics
+yfin fast-info TSLA
+
+# Check market status
+yfin market-status
+
+# View quarterly income statement
 yfin income-stmt MSFT --frequency quarterly
-```
 
-**Get analyst recommendations:**
-```bash
+# Get analyst recommendations
 yfin recommendations NVDA
-```
 
-**Check insider transactions:**
-```bash
-yfin insider-transactions TSLA
-```
-
-**View sector top companies (table format):**
-```bash
-yfin --output table sector-top-companies technology
-```
-
-**Get industry top performers:**
-```bash
-yfin industry-top-performing-companies aluminum
-```
-
-**Screen stocks by sector and market cap:**
-```bash
+# Screen stocks
 yfin screen --filter "sector eq Technology" --filter "intradaymarketcap gt 100000000000"
-```
 
-**Use a predefined screener:**
-```bash
+# Use a predefined screener
 yfin screen --predefined day_gainers
+
+# Output as a table
+yfin --output table history AAPL --period 1y
 ```
 
-**View earnings calendar:**
-```bash
-yfin calendar-earnings --start 2026-02-01 --end 2026-02-28
-```
-
-**Get recent news:**
-```bash
-yfin news GOOGL --count 10
-```
+> For the complete command reference with all options and parameters, see [COMMANDS.md](COMMANDS.md).
 
 ## Available Commands
 
@@ -133,11 +111,11 @@ yfin news GOOGL --count 10
 |----------|----------|
 | **Stock** | `history`, `dividends`, `fast-info`, `news` |
 | **Market** | `market-status` |
+| **Calendar** | `calendar-earnings`, `calendar-economic-events`, `calendar-ipo` |
 | **Financials** | `income-stmt`, `balance-sheet`, `cashflow`, `earnings-dates`, `sec-filings` |
 | **Analysis** | `recommendations`, `upgrades-downgrades`, `price-targets`, `earnings-estimate`, `revenue-estimate`, `earnings-history`, `eps-trend`, `eps-revisions`, `growth-estimates` |
 | **Holders** | `insider-purchases`, `insider-transactions`, `insider-roster-holders`, `major-holders`, `institutional-holders`, `mutualfund-holders` |
-| **Calendar** | `calendar-earnings`, `calendar-ipo`, `calendar-economic-events` |
-| **Sector** | `sector-industries`, `sector-overview`, `sector-research-reports`, `sector-top-companies`, `sector-top-etfs`, `sector-top-mutual-funds` |
+| **Sector** | `sector-keys`, `sector-industries`, `sector-overview`, `sector-research-reports`, `sector-top-companies`, `sector-top-etfs`, `sector-top-mutual-funds` |
 | **Industry** | `industry-overview`, `industry-research-reports`, `industry-top-companies`, `industry-top-growth-companies`, `industry-top-performing-companies` |
 | **Screen** | `screen`, `screen-query-fields`, `screen-query-values`, `screen-predefined-queries` |
 

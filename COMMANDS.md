@@ -3,7 +3,7 @@
 A comprehensive reference for every command in the `yfin` CLI.
 
 > [!TIP]
-> **Global option:** All commands support `--output json` (default). Use `--help` on any command for quick reference.
+> **Global option:** All commands support `--output json` (default) and `--output table`. Use `--help` on any command for quick reference.
 
 ---
 
@@ -18,8 +18,8 @@ A comprehensive reference for every command in the `yfin` CLI.
   - [`market-status`](#market-status)
 - [Calendar](#calendar)
   - [`calendar-earnings`](#calendar-earnings)
-  - [`calendar-ipo`](#calendar-ipo)
   - [`calendar-economic-events`](#calendar-economic-events)
+  - [`calendar-ipo`](#calendar-ipo)
 - [Financials](#financials)
   - [`income-stmt`](#income-stmt)
   - [`balance-sheet`](#balance-sheet)
