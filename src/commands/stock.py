@@ -95,7 +95,7 @@ def fast_info(
     ticker: TickerType,
 ):
     """
-    Get fast info summary for a stock ticker.
+    Get fast info (15 min delayed) summary for a stock ticker.
 
     Returns key metrics like price, market cap, volume, and 52-week range.
     """
@@ -116,16 +116,16 @@ def news(
     """
     stock = yf.Ticker(ticker)
     news_list = stock.get_news(count, tab)
-    # processed_news_list = []
-    # for article in news_list:
-    #     content = article.get("content") or {}
-    #     processed_news_list.append(
-    #         {
-    #             "Date": content.get("pubDate"),
-    #             "Title": content.get("title"),
-    #             "Summary": content.get("summary"),
-    #             "URL": (content.get("canonicalUrl") or {}).get("url"),
-    #             "Source": (content.get("provider") or {}).get("displayName"),
-    #         }
-    #     )
-    return news_list
+    processed_news_list = []
+    for article in news_list:
+        content = article.get("content") or {}
+        processed_news_list.append(
+            {
+                "Date": content.get("pubDate"),
+                "Title": content.get("title"),
+                "Summary": content.get("summary"),
+                "URL": (content.get("canonicalUrl") or {}).get("url"),
+                "Source": (content.get("provider") or {}).get("displayName"),
+            }
+        )
+    return processed_news_list

@@ -1,3 +1,4 @@
+import json
 from typing import Any, NoReturn
 from datetime import datetime, timedelta
 from pandas import DataFrame, Series
@@ -44,8 +45,8 @@ def is_number(s: str) -> bool:
 
 
 def data_frame_to_list(data_frame: DataFrame, index_name: str | None = None) -> list:
-    return data_frame.reset_index(names=index_name).to_dict(orient="records")
+    return json.loads(data_frame.reset_index(names=index_name).to_json(orient="records", date_format="iso"))
 
 
 def series_to_list(series: Series) -> list:
-    return series.reset_index().to_dict(orient="records")
+    return json.loads(series.reset_index().to_json(orient="records", date_format="iso"))

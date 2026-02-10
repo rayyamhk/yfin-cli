@@ -1,7 +1,7 @@
+import json
 from typing import Protocol
 from pandas import DataFrame
 from .utils import print
-
 
 class OutputWriter(Protocol):
     def write(self, data: dict | list) -> None: ...
@@ -17,5 +17,5 @@ class WriterFactory:
 
 class JsonWriter(OutputWriter):
     def write(self, data: dict | list) -> None:
-        print(data)
+        print(json.dumps(data, indent=2, default=str))
 

@@ -39,6 +39,11 @@ A command-line interface for [Yahoo Finance](https://finance.yahoo.com/) data, p
 - **Sector Commands** - Industries, overview, top companies, ETFs, mutual funds
 - **Industry Commands** - Overview, top companies, growth companies, top performers
 
+### Stock Screener
+- **Screen** (`screen`) - Filter stocks by criteria (sector, market cap, beta, etc.)
+- **Predefined Queries** - Use built-in screeners (day gainers, most actives, undervalued stocks)
+- **JSON Queries** - Complex nested AND/OR logic for advanced screening
+
 ## Installation
 
 ### Using uv (Recommended)
@@ -98,6 +103,16 @@ yfin --output table sector-top-companies technology
 yfin industry-top-performing-companies aluminum
 ```
 
+**Screen stocks by sector and market cap:**
+```bash
+yfin screen --filter "sector eq Technology" --filter "intradaymarketcap gt 100000000000"
+```
+
+**Use a predefined screener:**
+```bash
+yfin screen --predefined day_gainers
+```
+
 **View earnings calendar:**
 ```bash
 yfin calendar-earnings --start 2026-02-01 --end 2026-02-28
@@ -119,6 +134,7 @@ yfin news GOOGL --count 10
 | **Calendar** | `calendar-earnings`, `calendar-ipo`, `calendar-economic-events` |
 | **Sector** | `sector-industries`, `sector-overview`, `sector-research-reports`, `sector-top-companies`, `sector-top-etfs`, `sector-top-mutual-funds` |
 | **Industry** | `industry-overview`, `industry-research-reports`, `industry-top-companies`, `industry-top-growth-companies`, `industry-top-performing-companies` |
+| **Screen** | `screen`, `screen-query-fields`, `screen-query-values`, `screen-predefined-queries` |
 
 ## Development
 
