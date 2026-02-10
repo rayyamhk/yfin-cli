@@ -32,6 +32,7 @@ from .commands.financials import (
     balance_sheet,
     cashflow,
     earnings_dates,
+    sec_filings,
 )
 from .commands.industry import (
     industry_overview,
@@ -61,6 +62,7 @@ from .commands.screen import (
     screen_query_values,
     screen_predefined_queries,
 )
+from .commands.market import market_status
 
 app = typer.Typer(
     name="yfin",
@@ -80,6 +82,8 @@ app.command(rich_help_panel="Stock")(dividends)
 app.command(rich_help_panel="Stock")(fast_info)
 app.command(rich_help_panel="Stock")(news)
 
+app.command(rich_help_panel="Market")(market_status)
+
 app.command(rich_help_panel="Calendar")(calendar_earnings)
 app.command(rich_help_panel="Calendar")(calendar_ipo)
 app.command(rich_help_panel="Calendar")(calendar_economic_events)
@@ -88,6 +92,7 @@ app.command(rich_help_panel="Financials")(income_stmt)
 app.command(rich_help_panel="Financials")(balance_sheet)
 app.command(rich_help_panel="Financials")(cashflow)
 app.command(rich_help_panel="Financials")(earnings_dates)
+app.command(rich_help_panel="Financials")(sec_filings)
 
 app.command(rich_help_panel="Analysis")(recommendations)
 app.command(rich_help_panel="Analysis")(upgrades_downgrades)

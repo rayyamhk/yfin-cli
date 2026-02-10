@@ -68,3 +68,15 @@ def earnings_dates(
     stock = yf.Ticker(ticker)
     data_frame = stock.get_earnings_dates(limit=limit, offset=offset)
     return data_frame_to_list(data_frame)
+
+
+@handle_errors
+@with_output
+def sec_filings(
+    ticker: TickerType,
+):
+    """
+    Get SEC filings for a ticker.
+    """
+    stock = yf.Ticker(ticker)
+    return stock.get_sec_filings()
