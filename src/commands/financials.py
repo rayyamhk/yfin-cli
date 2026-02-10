@@ -24,6 +24,8 @@ def income_stmt(
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_income_stmt(pretty=True, freq=frequency)
+    if data_frame is None:
+        return None
     return data_frame_to_list(data_frame.T, index_name="Date")
 
 
@@ -38,6 +40,8 @@ def balance_sheet(
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_balance_sheet(pretty=True, freq=frequency)
+    if data_frame is None:
+        return None
     return data_frame_to_list(data_frame.T, index_name="Date")
 
 
@@ -52,6 +56,8 @@ def cashflow(
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_cashflow(pretty=True, freq=frequency)
+    if data_frame is None:
+        return None
     return data_frame_to_list(data_frame.T, index_name="Date")
 
 

@@ -1,16 +1,11 @@
 """Tests for the earnings-dates command."""
 
+import json
 import pandas as pd
-from typer.testing import CliRunner
 from unittest.mock import patch, MagicMock
-from src.cli import app
-
-runner = CliRunner()
 
 
-# Mock Earnings Dates data for testing
 def create_mock_earnings_dates_data():
-    """Create a mock pandas DataFrame similar to yf.Ticker.get_earnings_dates output."""
     dates = [
         pd.Timestamp("2026-04-29 17:00:00-04:00"),
         pd.Timestamp("2026-01-28 16:00:00-05:00"),
@@ -24,60 +19,49 @@ def create_mock_earnings_dates_data():
     return pd.DataFrame(data, index=dates)
 
 
-class TestEarningsDatesCommand:
-    """Tests for the earnings-dates CLI command."""
+@patch("src.commands.financials.yf.Ticker")
+def test_earnings_dates_basic(mock_ticker, invoke_json):
+    mock_ticker.return_value.get_earnings_dates.return_value = create_mock_earnings_dates_data()
+    code, data = invoke_json("earnings-dates", "MSFT")
 
-    @patch("src.commands.financials.yf.Ticker")
-    def test_earnings_dates_basic(self, mock_ticker):
-        """Test basic earnings-dates command execution."""
-        mock_instance = MagicMock()
-        mock_ticker.return_value = mock_instance
-        mock_instance.get_earnings_dates.return_value = (
-            create_mock_earnings_dates_data()
-        )
+    assert code == 0
+    assert len(data) == 3
+    assert data[0]["EPS Estimate"] == 4.08
+    assert data[1]["Reported EPS"] == 5.16
+    assert data[1]["Surprise(%)"] == 34.08
 
-        result = runner.invoke(app, ["earnings-dates", "MSFT"])
 
-        assert result.exit_code == 0
-        assert "2026-04-29" in result.output
-        assert "4.08" in result.output
-        assert "34.08" in result.output  # Raw percent value
+@patch("src.commands.financials.yf.Ticker")
+def test_earnings_dates_with_options(mock_ticker, invoke_json):
+    mock_ticker.return_value.get_earnings_dates.return_value = create_mock_earnings_dates_data()
+    code, _ = invoke_json("earnings-dates", "MSFT", "--limit", "5", "--offset", "10")
 
-        # Verify call args
-        mock_instance.get_earnings_dates.assert_called_once()
+    assert code == 0
+    mock_ticker.return_value.get_earnings_dates.assert_called_once_with(limit=5, offset=10)
 
-    @patch("src.commands.financials.yf.Ticker")
-    def test_earnings_dates_no_data(self, mock_ticker):
-        """Test earnings-dates command when no data is found."""
-        mock_instance = MagicMock()
-        mock_ticker.return_value = mock_instance
-        mock_instance.get_earnings_dates.return_value = pd.DataFrame()
 
-        result = runner.invoke(app, ["earnings-dates", "MSFT"])
+@patch("src.commands.financials.yf.Ticker")
+def test_earnings_dates_empty_data(mock_ticker, invoke_json):
+    mock_ticker.return_value.get_earnings_dates.return_value = pd.DataFrame()
+    code, data = invoke_json("earnings-dates", "MSFT")
 
-        assert result.exit_code == 0
-        assert "[]" in result.output
+    assert code == 0
+    assert data == []
 
-    @patch("src.commands.financials.yf.Ticker")
-    def test_earnings_dates_none_data(self, mock_ticker):
-        """Test earnings-dates command when data is None."""
-        mock_instance = MagicMock()
-        mock_ticker.return_value = mock_instance
-        mock_instance.get_earnings_dates.return_value = None
 
-        result = runner.invoke(app, ["earnings-dates", "MSFT"])
+@patch("src.commands.financials.yf.Ticker")
+def test_earnings_dates_none_data(mock_ticker, invoke):
+    mock_ticker.return_value.get_earnings_dates.return_value = None
+    result = invoke("earnings-dates", "MSFT")
 
-        assert result.exit_code == 1
-        assert "No data found" in result.output
+    assert result.exit_code == 1
+    assert "No data found" in result.output
 
-    @patch("src.commands.financials.yf.Ticker")
-    def test_earnings_dates_api_error(self, mock_ticker):
-        """Test earnings-dates command handles API errors."""
-        mock_instance = MagicMock()
-        mock_ticker.return_value = mock_instance
-        mock_instance.get_earnings_dates.side_effect = Exception("API Error")
 
-        result = runner.invoke(app, ["earnings-dates", "MSFT"])
+@patch("src.commands.financials.yf.Ticker")
+def test_earnings_dates_api_error(mock_ticker, invoke):
+    mock_ticker.return_value.get_earnings_dates.side_effect = Exception("API Error")
+    result = invoke("earnings-dates", "MSFT")
 
-        assert result.exit_code == 1
-        assert "Unexpected error" in result.output
+    assert result.exit_code == 1
+    assert "Unexpected error" in result.output

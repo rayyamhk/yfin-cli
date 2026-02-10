@@ -1,13 +1,9 @@
 """Tests for the news command."""
 
-from typer.testing import CliRunner
+import json
 from unittest.mock import patch
-from src.cli import app
-
-runner = CliRunner()
 
 
-# Mock article data for testing
 MOCK_ARTICLES = [
     {
         "id": "test-1",
@@ -32,59 +28,63 @@ MOCK_ARTICLES = [
 ]
 
 
-class TestNewsCommand:
-    """Tests for the news CLI command."""
+@patch("src.commands.stock.yf.Ticker")
+def test_news_basic(mock_ticker, invoke_json):
+    mock_ticker.return_value.get_news.return_value = MOCK_ARTICLES
+    code, data = invoke_json("news", "TSLA")
 
-    @patch("src.commands.stock.yf.Ticker")
-    def test_news_basic(self, mock_ticker):
-        """Test basic news command execution."""
-        mock_ticker.return_value.get_news.return_value = MOCK_ARTICLES
-        result = runner.invoke(app, ["news", "TSLA"])
-        assert result.exit_code == 0
-        # Rich table may wrap text, so check for partial match
-        assert "Test Article" in result.stdout
+    assert code == 0
+    assert len(data) == 2
+    assert data[0]["Title"] == "Test Article Title"
+    assert data[0]["Source"] == "Test Source"
+    assert data[0]["URL"] == "https://example.com/article"
+    assert data[1]["Title"] == "Another Test Article"
 
-    @patch("src.commands.stock.yf.Ticker")
-    def test_news_with_count(self, mock_ticker):
-        """Test news command with --count option."""
-        mock_ticker.return_value.get_news.return_value = MOCK_ARTICLES[:1]
-        result = runner.invoke(app, ["news", "TSLA", "--count", "1"])
-        assert result.exit_code == 0
-        mock_ticker.return_value.get_news.assert_called_once_with(1, "all")
 
-    @patch("src.commands.stock.yf.Ticker")
-    def test_news_with_tab(self, mock_ticker):
-        """Test news command with --tab option."""
-        mock_ticker.return_value.get_news.return_value = MOCK_ARTICLES
-        result = runner.invoke(app, ["news", "TSLA", "--tab", "news"])
-        assert result.exit_code == 0
-        mock_ticker.return_value.get_news.assert_called_once_with(5, "news")
+@patch("src.commands.stock.yf.Ticker")
+def test_news_with_count(mock_ticker, invoke):
+    mock_ticker.return_value.get_news.return_value = MOCK_ARTICLES[:1]
+    result = invoke("news", "TSLA", "--count", "1")
 
-    def test_news_invalid_tab(self):
-        """Test news command with invalid tab option."""
-        result = runner.invoke(app, ["news", "TSLA", "--tab", "invalid"])
-        assert result.exit_code == 2
-        assert "Invalid value" in result.output
+    assert result.exit_code == 0
+    mock_ticker.return_value.get_news.assert_called_once_with(1, "all")
 
-    @patch("src.commands.stock.yf.Ticker")
-    def test_news_no_articles(self, mock_ticker):
-        """Test news command when no articles are found."""
-        mock_ticker.return_value.get_news.return_value = []
-        result = runner.invoke(app, ["news", "TSLA"])
-        assert result.exit_code == 0
-        assert "[]" in result.output
 
-    @patch("src.commands.stock.yf.Ticker")
-    def test_news_ticker_uppercase(self, mock_ticker):
-        """Test that ticker is converted to uppercase."""
-        mock_ticker.return_value.get_news.return_value = MOCK_ARTICLES
-        runner.invoke(app, ["news", "tsla"])
-        mock_ticker.assert_called_once_with("TSLA")
+@patch("src.commands.stock.yf.Ticker")
+def test_news_with_tab(mock_ticker, invoke):
+    mock_ticker.return_value.get_news.return_value = MOCK_ARTICLES
+    result = invoke("news", "TSLA", "--tab", "news")
 
-    @patch("src.commands.stock.yf.Ticker")
-    def test_news_api_error(self, mock_ticker):
-        """Test news command handles API errors gracefully."""
-        mock_ticker.return_value.get_news.side_effect = Exception("API Error")
-        result = runner.invoke(app, ["news", "TSLA"])
-        assert result.exit_code == 1
-        assert "Unexpected error" in result.output
+    assert result.exit_code == 0
+    mock_ticker.return_value.get_news.assert_called_once_with(5, "news")
+
+
+def test_news_invalid_tab(invoke):
+    result = invoke("news", "TSLA", "--tab", "invalid")
+    assert result.exit_code == 2
+    assert "Invalid" in result.output
+
+
+@patch("src.commands.stock.yf.Ticker")
+def test_news_empty_articles(mock_ticker, invoke_json):
+    mock_ticker.return_value.get_news.return_value = []
+    code, data = invoke_json("news", "TSLA")
+
+    assert code == 0
+    assert data == []
+
+
+@patch("src.commands.stock.yf.Ticker")
+def test_news_ticker_uppercase(mock_ticker, invoke):
+    mock_ticker.return_value.get_news.return_value = MOCK_ARTICLES
+    invoke("news", "tsla")
+    mock_ticker.assert_called_once_with("TSLA")
+
+
+@patch("src.commands.stock.yf.Ticker")
+def test_news_api_error(mock_ticker, invoke):
+    mock_ticker.return_value.get_news.side_effect = Exception("API Error")
+    result = invoke("news", "TSLA")
+
+    assert result.exit_code == 1
+    assert "Unexpected error" in result.output

@@ -1,16 +1,12 @@
-"""Tests for the income-statement command."""
+"""Tests for the income-stmt command."""
 
+import json
 import pandas as pd
-from typer.testing import CliRunner
+import pytest
 from unittest.mock import patch, MagicMock
-from src.cli import app
-
-runner = CliRunner()
 
 
-# Mock Income Statement data for testing
-def create_mock_income_statement_data(freq="yearly"):
-    """Create a mock pandas DataFrame similar to yf.Ticker.get_income_stmt output."""
+def create_mock_income_data(freq="yearly"):
     dates = [
         pd.Timestamp("2025-09-30"),
         pd.Timestamp("2024-09-30"),
@@ -32,64 +28,56 @@ def create_mock_income_statement_data(freq="yearly"):
     return pd.DataFrame(data, index=index)
 
 
-class TestIncomeStatementCommand:
-    """Tests for the income-statement CLI command."""
+@patch("src.commands.financials.yf.Ticker")
+def test_income_stmt_basic(mock_ticker, invoke_json):
+    mock_ticker.return_value.get_income_stmt.return_value = create_mock_income_data()
+    code, data = invoke_json("income-stmt", "AAPL")
 
-    @patch("src.commands.financials.yf.Ticker")
-    def test_income_statement_basic(self, mock_ticker):
-        """Test basic income-statement command execution (yearly)."""
-        mock_instance = MagicMock()
-        mock_ticker.return_value = mock_instance
-        mock_instance.get_income_stmt.return_value = create_mock_income_statement_data(
-            freq="yearly"
-        )
+    assert code == 0
+    assert len(data) == 3
+    assert data[0]["TotalRevenue"] == 1000.0
+    assert data[0]["NetIncome"] == 500.0
+    mock_ticker.return_value.get_income_stmt.assert_called_with(pretty=True, freq="yearly")
 
-        result = runner.invoke(app, ["income-stmt", "AAPL"])
 
-        assert result.exit_code == 0
-        assert "TotalRevenue" in result.output
-        assert "1000.0" in result.output
+@patch("src.commands.financials.yf.Ticker")
+def test_income_stmt_quarterly(mock_ticker, invoke_json):
+    mock_ticker.return_value.get_income_stmt.return_value = create_mock_income_data("quarterly")
+    code, data = invoke_json("income-stmt", "AAPL", "--frequency", "quarterly")
 
-        # Verify call args
-        mock_instance.get_income_stmt.assert_called_with(pretty=True, freq="yearly")
+    assert code == 0
+    assert "2025-12-31" in data[0]["Date"]
+    mock_ticker.return_value.get_income_stmt.assert_called_with(pretty=True, freq="quarterly")
 
-    @patch("src.commands.financials.yf.Ticker")
-    def test_income_statement_quarterly(self, mock_ticker):
-        """Test income-statement command with --quarterly option."""
-        mock_instance = MagicMock()
-        mock_ticker.return_value = mock_instance
-        mock_instance.get_income_stmt.return_value = create_mock_income_statement_data(
-            freq="quarterly"
-        )
 
-        result = runner.invoke(app, ["income-stmt", "AAPL", "--frequency", "quarterly"])
+def test_income_stmt_invalid_frequency(invoke):
+    result = invoke("income-stmt", "AAPL", "--frequency", "invalid")
+    assert result.exit_code == 2
+    assert "Invalid" in result.output
 
-        assert result.exit_code == 0
-        assert "2025-12-31" in result.output
 
-        # Verify call args
-        mock_instance.get_income_stmt.assert_called_with(pretty=True, freq="quarterly")
+@patch("src.commands.financials.yf.Ticker")
+def test_income_stmt_empty_data(mock_ticker, invoke_json):
+    mock_ticker.return_value.get_income_stmt.return_value = pd.DataFrame()
+    code, data = invoke_json("income-stmt", "AAPL")
 
-    @patch("src.commands.financials.yf.Ticker")
-    def test_income_statement_no_data(self, mock_ticker):
-        """Test income-statement command when no data is found."""
-        mock_instance = MagicMock()
-        mock_ticker.return_value = mock_instance
-        mock_instance.get_income_stmt.return_value = pd.DataFrame()
+    assert code == 0
+    assert data == []
 
-        result = runner.invoke(app, ["income-stmt", "AAPL"])
 
-        assert result.exit_code == 0
-        assert "[]" in result.output
+@patch("src.commands.financials.yf.Ticker")
+def test_income_stmt_none_data(mock_ticker, invoke):
+    mock_ticker.return_value.get_income_stmt.return_value = None
+    result = invoke("income-stmt", "AAPL")
 
-    @patch("src.commands.financials.yf.Ticker")
-    def test_income_statement_api_error(self, mock_ticker):
-        """Test income-statement command handles API errors."""
-        mock_instance = MagicMock()
-        mock_ticker.return_value = mock_instance
-        mock_instance.get_income_stmt.side_effect = Exception("API Error")
+    assert result.exit_code == 1
+    assert "No data found" in result.output
 
-        result = runner.invoke(app, ["income-stmt", "AAPL"])
 
-        assert result.exit_code == 1
-        assert "Unexpected error" in result.output
+@patch("src.commands.financials.yf.Ticker")
+def test_income_stmt_api_error(mock_ticker, invoke):
+    mock_ticker.return_value.get_income_stmt.side_effect = Exception("API Error")
+    result = invoke("income-stmt", "AAPL")
+
+    assert result.exit_code == 1
+    assert "Unexpected error" in result.output
