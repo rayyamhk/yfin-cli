@@ -2,7 +2,6 @@ import typer
 from typing import Annotated
 from .utils import (
     get_today_date_string,
-    get_seven_days_from_today_date_string,
     validate_date_string,
     validate_value_in_list,
 )
@@ -62,10 +61,9 @@ StartDateTypeOptional = Annotated[
 ]
 
 EndDateType = Annotated[
-    str,
+    str | None,
     typer.Option(
-        default_factory=get_seven_days_from_today_date_string,
-        callback=validate_date_string,
+        callback=lambda x: validate_date_string(x) if x else None,
         help="End date (YYYY-MM-DD), default 7 days from start",
     ),
 ]

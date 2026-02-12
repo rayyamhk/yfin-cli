@@ -46,6 +46,7 @@ def test_calendar_earnings_with_options(mock_calendars, invoke_json):
     call_kwargs = mock_calendars.return_value.get_earnings_calendar.call_args[1]
     assert call_kwargs["limit"] == 5
     assert call_kwargs["start"] == "2026-02-01"
+    assert call_kwargs["end"] == "2026-02-08"
 
 
 @patch("src.commands.calendar.yf.Calendars")

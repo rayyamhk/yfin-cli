@@ -34,8 +34,11 @@ def get_today_date_string() -> str:
     return format_datetime(datetime.now())
 
 
-def get_seven_days_from_today_date_string() -> str:
-    return format_datetime(datetime.now() + timedelta(days=7))
+def default_end_from_start(start: str, end: str | None) -> str:
+    if end is not None:
+        return end
+    start_date = datetime.strptime(start, "%Y-%m-%d")
+    return format_datetime(start_date + timedelta(days=7))
 
 
 def format_datetime(val: datetime) -> str:
@@ -70,7 +73,9 @@ def validate_value_in_list(valid_values: list[str]) -> Callable[[str], str]:
     def _validator(x: str) -> str:
         if x in valid_values:
             return x
-        raise typer.BadParameter(f"Invalid value: {x}, should be one of {', '.join(valid_values)}")
+        raise typer.BadParameter(
+            f"Invalid value: {x}, should be one of {', '.join(valid_values)}"
+        )
 
     return _validator
 

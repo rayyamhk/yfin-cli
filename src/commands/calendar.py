@@ -10,13 +10,13 @@ from ..typer import (
     default_market_cap,
 )
 from ..decorators import command
-from ..utils import compact, data_frame_to_list
+from ..utils import compact, data_frame_to_list, default_end_from_start
 
 
 @command
 def calendar_earnings(
     start: StartDateType,
-    end: EndDateType,
+    end: EndDateType = None,
     limit: LimitType = default_limit,
     offset: OffsetType = default_offset,
     market_cap: MarketCapType = default_market_cap,
@@ -24,6 +24,7 @@ def calendar_earnings(
     """
     Get earnings calendar.
     """
+    end = default_end_from_start(start, end)
     kwargs = compact(
         limit=limit,
         offset=offset,
@@ -40,13 +41,14 @@ def calendar_earnings(
 @command
 def calendar_economic_events(
     start: StartDateType,
-    end: EndDateType,
+    end: EndDateType = None,
     limit: LimitType = default_limit,
     offset: OffsetType = default_offset,
 ):
     """
     Get economic events calendar.
     """
+    end = default_end_from_start(start, end)
     kwargs = compact(
         limit=limit,
         offset=offset,
@@ -62,13 +64,14 @@ def calendar_economic_events(
 @command
 def calendar_ipo(
     start: StartDateType,
-    end: EndDateType,
+    end: EndDateType = None,
     limit: LimitType = default_limit,
     offset: OffsetType = default_offset,
 ):
     """
     Get IPO calendar.
     """
+    end = default_end_from_start(start, end)
     kwargs = compact(
         limit=limit,
         offset=offset,

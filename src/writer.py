@@ -1,8 +1,7 @@
 import json
 from typing import Protocol
 from rich.table import Table
-from .utils import console_print, is_number
-from rich import box
+from .utils import console_print
 
 
 class OutputWriter(Protocol):
@@ -22,6 +21,7 @@ class WriterFactory:
 class JsonWriter(OutputWriter):
     def write(self, data: dict | list) -> None:
         console_print(json.dumps(data, indent=2, default=str))
+
 
 class TableWriter(OutputWriter):
     def write(self, data: dict | list) -> None:

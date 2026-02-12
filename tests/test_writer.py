@@ -3,6 +3,7 @@
 import json
 import pytest
 from src.writer import WriterFactory, JsonWriter, TableWriter
+from unittest.mock import patch
 
 
 # ── WriterFactory ─────────────────────────────────────────────────────
@@ -49,10 +50,12 @@ def test_table_writer_dict_single_key(capsys):
 
 def test_table_writer_list(capsys):
     writer = TableWriter()
-    writer.write([
-        {"name": "AAPL", "price": 150},
-        {"name": "TSLA", "price": 400},
-    ])
+    writer.write(
+        [
+            {"name": "AAPL", "price": 150},
+            {"name": "TSLA", "price": 400},
+        ]
+    )
     output = capsys.readouterr().out
 
     assert "name" in output
@@ -94,9 +97,6 @@ def test_json_writer_list(capsys):
 
 
 # ── --output table CLI integration ────────────────────────────────────
-
-
-from unittest.mock import patch
 
 
 @patch("src.commands.market.yf.Market")
