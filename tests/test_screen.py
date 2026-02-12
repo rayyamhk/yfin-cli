@@ -58,7 +58,7 @@ def test_parse_filter_valid_operators(filter_str):
 @pytest.mark.parametrize(
     "filter_str, error_fragment",
     [
-        {"sector", "Invalid filter format"},
+        ("sector", "Invalid filter format"),
         ("sector eq", "Invalid filter format"),
         ("sector Technology", "Invalid filter format"),
         ("invalidField eq value", "Invalid field"),
@@ -165,6 +165,22 @@ def test_screen_query_values_valid_field_with_fixed_values(invoke):
     assert '"value": "Technology"' in result.output
 
 
+def test_screen_query_fields_basic(invoke_json):
+    with patch("src.commands.screen.VALID_FIELDS", {"beta", "marketcap"}):
+        code, data = invoke_json("screen-query-fields")
+
+    assert code == 0
+    assert data == [{"field": "beta"}, {"field": "marketcap"}]
+
+
+def test_screen_predefined_queries_basic(invoke_json):
+    with patch("src.commands.screen.PREDEFINED_QUERIES", {"q2", "q1"}):
+        code, data = invoke_json("screen-predefined-queries")
+
+    assert code == 0
+    assert data == [{"query": "q1"}, {"query": "q2"}]
+
+
 # ── screen command ────────────────────────────────────────────────────
 
 
@@ -257,9 +273,7 @@ def test_screen_missing_query(invoke):
 
 def test_screen_multiple_query_options(invoke):
     query = _pick_predefined_query()
-    result = invoke(
-        "screen", "--predefined", query, "--filter", "sector eq Technology"
-    )
+    result = invoke("screen", "--predefined", query, "--filter", "sector eq Technology")
     assert result.exit_code == 2
     assert "Exactly one of --filter, --predefined, or --json-query" in result.output
 
@@ -280,3 +294,38 @@ def test_screen_invalid_sort_field(invoke):
     )
     assert result.exit_code == 2
     assert "Invalid field" in result.output
+
+
+@patch("src.commands.screen.yf.screen")
+def test_screen_filters_multiple_builds_and_query(mock_screen, invoke_json):
+    mock_screen.return_value = {"quotes": []}
+    with (
+        patch("src.commands.screen.parse_filter") as mock_parse_filter,
+        patch("src.commands.screen.yf.EquityQuery") as mock_eq_query,
+    ):
+        mock_parse_filter.side_effect = ["q1", "q2"]
+        mock_eq_query.return_value = "AND_QUERY"
+        code, _ = invoke_json(
+            "screen",
+            "--filter",
+            "sector eq Technology",
+            "--filter",
+            "beta gt 1",
+        )
+
+    assert code == 0
+    mock_eq_query.assert_called_once_with("and", ["q1", "q2"])
+    args, kwargs = mock_screen.call_args
+    assert args[0] == "AND_QUERY"
+    assert kwargs["offset"] == default_offset
+    assert kwargs["size"] == default_limit
+    assert "count" not in kwargs
+
+
+@patch("src.commands.screen.yf.screen")
+def test_screen_api_error(mock_screen, invoke):
+    mock_screen.side_effect = Exception("API Error")
+    result = invoke("screen", "--filter", "sector eq Technology")
+
+    assert result.exit_code == 1
+    assert "Unexpected error" in result.output
