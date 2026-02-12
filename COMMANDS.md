@@ -70,13 +70,13 @@ A comprehensive reference for every command in the `yfin` CLI.
 
 Get historical market data (OHLCV) for a stock ticker.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol (e.g., TSLA, AAPL) |
-| `--interval` | option | — | `1d` | Data interval: `1m`, `2m`, `5m`, `15m`, `30m`, `60m`, `90m`, `1h`, `1d`, `5d`, `1wk`, `1mo`, `3mo` |
-| `--period` | option | — | `1mo`* | Data period: `1d`, `5d`, `1mo`, `3mo`, `6mo`, `1y`, `2y`, `5y`, `10y`, `ytd`, `max` |
-| `--start` | option | — | — | Start date (`YYYY-MM-DD`) |
-| `--end` | option | — | — | End date (`YYYY-MM-DD`) |
+| Parameter    | Type     | Required | Default | Description                                                                                        |
+| ------------ | -------- | -------- | ------- | -------------------------------------------------------------------------------------------------- |
+| `TICKER`     | argument | ✅       | —       | Stock ticker symbol (e.g., TSLA, AAPL)                                                             |
+| `--interval` | option   | —        | `1d`    | Data interval: `1m`, `2m`, `5m`, `15m`, `30m`, `60m`, `90m`, `1h`, `1d`, `5d`, `1wk`, `1mo`, `3mo` |
+| `--period`   | option   | —        | `1mo`\* | Data period: `1d`, `5d`, `1mo`, `3mo`, `6mo`, `1y`, `2y`, `5y`, `10y`, `ytd`, `max`                |
+| `--start`    | option   | —        | —       | Start date (`YYYY-MM-DD`)                                                                          |
+| `--end`      | option   | —        | —       | End date (`YYYY-MM-DD`)                                                                            |
 
 > \*Default period is `1mo` when no period, start, or end is specified. At most 2 of `--period`, `--start`, `--end` can be specified together.
 
@@ -102,10 +102,10 @@ yfin history GOOG --period ytd
 
 Get dividend history for a stock ticker.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
-| `--period` | option | — | `max` | Data period: `1d`, `5d`, `1mo`, `3mo`, `6mo`, `1y`, `2y`, `5y`, `10y`, `ytd`, `max` |
+| Parameter  | Type     | Required | Default | Description                                                                         |
+| ---------- | -------- | -------- | ------- | ----------------------------------------------------------------------------------- |
+| `TICKER`   | argument | ✅       | —       | Stock ticker symbol                                                                 |
+| `--period` | option   | —        | `max`   | Data period: `1d`, `5d`, `1mo`, `3mo`, `6mo`, `1y`, `2y`, `5y`, `10y`, `ytd`, `max` |
 
 **Examples:**
 
@@ -123,9 +123,9 @@ yfin dividends KO --period 5y
 
 Get fast info (15 min delayed) summary for a stock ticker. Returns key metrics like price, market cap, volume, and 52-week range.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
 
 **Examples:**
 
@@ -143,11 +143,11 @@ yfin fast-info MSFT
 
 Get news articles for a stock ticker.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
-| `--count` | option | — | `5` | Number of results to show |
-| `--tab` | option | — | `all` | News tab filter: `all`, `news`, `press releases` |
+| Parameter | Type     | Required | Default | Description                                      |
+| --------- | -------- | -------- | ------- | ------------------------------------------------ |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol                              |
+| `--count` | option   | —        | `10`    | Number of results to show                        |
+| `--tab`   | option   | —        | `all`   | News tab filter: `all`, `news`, `press releases` |
 
 **Examples:**
 
@@ -170,9 +170,9 @@ yfin news GOOG --count 3 --tab news
 
 Get the current US market status (open/closed, trading hours, timezone).
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| *(none)* | — | — | — | No parameters required |
+| Parameter | Type | Required | Default | Description            |
+| --------- | ---- | -------- | ------- | ---------------------- |
+| _(none)_  | —    | —        | —       | No parameters required |
 
 **Examples:**
 
@@ -189,13 +189,13 @@ yfin market-status
 
 Get the earnings calendar — upcoming and recent earnings announcements.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `--start` | option | — | today | Start date (`YYYY-MM-DD`) |
-| `--end` | option | — | today + 7 days | End date (`YYYY-MM-DD`) |
-| `--limit` | option | — | `12` | Maximum number of results |
-| `--offset` | option | — | `0` | Offset for pagination |
-| `--market-cap` | option | — | `0` | Minimum market cap filter |
+| Parameter      | Type   | Required | Default        | Description               |
+| -------------- | ------ | -------- | -------------- | ------------------------- |
+| `--start`      | option | —        | today          | Start date (`YYYY-MM-DD`) |
+| `--end`        | option | —        | today + 7 days | End date (`YYYY-MM-DD`)   |
+| `--limit`      | option | —        | `12`           | Maximum number of results |
+| `--offset`     | option | —        | `0`            | Offset for pagination     |
+| `--market-cap` | option | —        | `0`            | Minimum market cap filter |
 
 **Examples:**
 
@@ -219,12 +219,12 @@ yfin calendar-earnings --limit 10 --offset 10
 
 Get the IPO calendar — upcoming initial public offerings.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `--start` | option | — | today | Start date (`YYYY-MM-DD`) |
-| `--end` | option | — | today + 7 days | End date (`YYYY-MM-DD`) |
-| `--limit` | option | — | `12` | Maximum number of results |
-| `--offset` | option | — | `0` | Offset for pagination |
+| Parameter  | Type   | Required | Default        | Description               |
+| ---------- | ------ | -------- | -------------- | ------------------------- |
+| `--start`  | option | —        | today          | Start date (`YYYY-MM-DD`) |
+| `--end`    | option | —        | today + 7 days | End date (`YYYY-MM-DD`)   |
+| `--limit`  | option | —        | `12`           | Maximum number of results |
+| `--offset` | option | —        | `0`            | Offset for pagination     |
 
 **Examples:**
 
@@ -242,12 +242,12 @@ yfin calendar-ipo --start 2026-03-01 --end 2026-03-31
 
 Get the economic events calendar — scheduled economic data releases and events.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `--start` | option | — | today | Start date (`YYYY-MM-DD`) |
-| `--end` | option | — | today + 7 days | End date (`YYYY-MM-DD`) |
-| `--limit` | option | — | `12` | Maximum number of results |
-| `--offset` | option | — | `0` | Offset for pagination |
+| Parameter  | Type   | Required | Default        | Description               |
+| ---------- | ------ | -------- | -------------- | ------------------------- |
+| `--start`  | option | —        | today          | Start date (`YYYY-MM-DD`) |
+| `--end`    | option | —        | today + 7 days | End date (`YYYY-MM-DD`)   |
+| `--limit`  | option | —        | `12`           | Maximum number of results |
+| `--offset` | option | —        | `0`            | Offset for pagination     |
 
 **Examples:**
 
@@ -267,10 +267,10 @@ yfin calendar-economic-events --start 2026-02-10 --end 2026-02-14 --limit 50
 
 Get the income statement for a ticker.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
-| `--frequency` | option | — | `yearly` | Frequency: `yearly`, `quarterly`, `trailing` |
+| Parameter     | Type     | Required | Default  | Description                                  |
+| ------------- | -------- | -------- | -------- | -------------------------------------------- |
+| `TICKER`      | argument | ✅       | —        | Stock ticker symbol                          |
+| `--frequency` | option   | —        | `yearly` | Frequency: `yearly`, `quarterly`, `trailing` |
 
 **Examples:**
 
@@ -291,10 +291,10 @@ yfin income-stmt GOOG --frequency trailing
 
 Get the balance sheet for a ticker.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
-| `--frequency` | option | — | `yearly` | Frequency: `yearly`, `quarterly` |
+| Parameter     | Type     | Required | Default  | Description                      |
+| ------------- | -------- | -------- | -------- | -------------------------------- |
+| `TICKER`      | argument | ✅       | —        | Stock ticker symbol              |
+| `--frequency` | option   | —        | `yearly` | Frequency: `yearly`, `quarterly` |
 
 **Examples:**
 
@@ -312,10 +312,10 @@ yfin balance-sheet TSLA --frequency quarterly
 
 Get the cash flow statement for a ticker.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
-| `--frequency` | option | — | `yearly` | Frequency: `yearly`, `quarterly`, `trailing` |
+| Parameter     | Type     | Required | Default  | Description                                  |
+| ------------- | -------- | -------- | -------- | -------------------------------------------- |
+| `TICKER`      | argument | ✅       | —        | Stock ticker symbol                          |
+| `--frequency` | option   | —        | `yearly` | Frequency: `yearly`, `quarterly`, `trailing` |
 
 **Examples:**
 
@@ -333,11 +333,11 @@ yfin cashflow NVDA --frequency quarterly
 
 Get earnings dates, estimates, and reported EPS for a ticker.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
-| `--limit` | option | — | `12` | Maximum number of results |
-| `--offset` | option | — | `0` | Offset for pagination |
+| Parameter  | Type     | Required | Default | Description               |
+| ---------- | -------- | -------- | ------- | ------------------------- |
+| `TICKER`   | argument | ✅       | —       | Stock ticker symbol       |
+| `--limit`  | option   | —        | `12`    | Maximum number of results |
+| `--offset` | option   | —        | `0`     | Offset for pagination     |
 
 **Examples:**
 
@@ -358,9 +358,9 @@ yfin earnings-dates GOOG --limit 10 --offset 10
 
 Get SEC filings for a ticker.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
 
 **Examples:**
 
@@ -377,9 +377,9 @@ yfin sec-filings AAPL
 
 Get analyst recommendations — number of buy, sell, and hold ratings across time periods.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
 
 **Examples:**
 
@@ -394,9 +394,9 @@ yfin recommendations TSLA
 
 Get the history of analyst upgrades and downgrades.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
 
 **Examples:**
 
@@ -410,9 +410,9 @@ yfin upgrades-downgrades AAPL
 
 Get analyst price targets (current, low, high, mean, median).
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
 
 **Examples:**
 
@@ -426,9 +426,9 @@ yfin price-targets TSLA
 
 Get analyst earnings estimates for upcoming periods.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
 
 **Examples:**
 
@@ -442,9 +442,9 @@ yfin earnings-estimate AAPL
 
 Get analyst revenue estimates for upcoming periods.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
 
 **Examples:**
 
@@ -458,9 +458,9 @@ yfin revenue-estimate MSFT
 
 Get historical earnings — actual vs. estimated EPS.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
 
 **Examples:**
 
@@ -474,9 +474,9 @@ yfin earnings-history GOOG
 
 Get the EPS trend — how estimates have changed over time.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
 
 **Examples:**
 
@@ -490,9 +490,9 @@ yfin eps-trend AAPL
 
 Get EPS revisions — analyst estimate changes (up/down revisions).
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
 
 **Examples:**
 
@@ -506,9 +506,9 @@ yfin eps-revisions NVDA
 
 Get analyst growth estimates for a stock.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
 
 **Examples:**
 
@@ -522,9 +522,9 @@ yfin growth-estimates AMZN
 
 Get insider purchase activity summary.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
 
 **Examples:**
 
@@ -538,9 +538,9 @@ yfin insider-purchases AAPL
 
 Get detailed insider transaction records (buys, sells, exercises).
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
 
 **Examples:**
 
@@ -554,9 +554,9 @@ yfin insider-transactions TSLA
 
 Get the insider roster — list of insiders and their holdings.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
 
 **Examples:**
 
@@ -570,9 +570,9 @@ yfin insider-roster-holders MSFT
 
 Get major holders breakdown (% held by insiders, institutions, etc.).
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
 
 **Examples:**
 
@@ -586,9 +586,9 @@ yfin major-holders AAPL
 
 Get the top institutional holders and their positions.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
 
 **Examples:**
 
@@ -602,9 +602,9 @@ yfin institutional-holders GOOG
 
 Get the top mutual fund holders and their positions.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
 
 **Examples:**
 
@@ -620,9 +620,9 @@ yfin mutualfund-holders MSFT
 
 Get all available sector keys. Use these keys as arguments for other sector commands.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| *(none)* | — | — | — | No parameters required |
+| Parameter | Type | Required | Default | Description            |
+| --------- | ---- | -------- | ------- | ---------------------- |
+| _(none)_  | —    | —        | —       | No parameters required |
 
 **Examples:**
 
@@ -637,9 +637,9 @@ yfin sector-keys
 
 Get the industries within a sector.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `KEY` | argument | ✅ | — | A valid sector key (use `yfin sector-keys` to find) |
+| Parameter | Type     | Required | Default | Description                                         |
+| --------- | -------- | -------- | ------- | --------------------------------------------------- |
+| `KEY`     | argument | ✅       | —       | A valid sector key (use `yfin sector-keys` to find) |
 
 **Examples:**
 
@@ -657,9 +657,9 @@ yfin sector-industries healthcare
 
 Get overview information for a sector.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `KEY` | argument | ✅ | — | A valid sector key |
+| Parameter | Type     | Required | Default | Description        |
+| --------- | -------- | -------- | ------- | ------------------ |
+| `KEY`     | argument | ✅       | —       | A valid sector key |
 
 **Examples:**
 
@@ -674,9 +674,9 @@ yfin sector-overview energy
 
 Get research reports related to a sector.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `KEY` | argument | ✅ | — | A valid sector key |
+| Parameter | Type     | Required | Default | Description        |
+| --------- | -------- | -------- | ------- | ------------------ |
+| `KEY`     | argument | ✅       | —       | A valid sector key |
 
 **Examples:**
 
@@ -690,9 +690,9 @@ yfin sector-research-reports financial-services
 
 Get the top companies within a sector.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `KEY` | argument | ✅ | — | A valid sector key |
+| Parameter | Type     | Required | Default | Description        |
+| --------- | -------- | -------- | ------- | ------------------ |
+| `KEY`     | argument | ✅       | —       | A valid sector key |
 
 **Examples:**
 
@@ -707,9 +707,9 @@ yfin sector-top-companies consumer-cyclical
 
 Get the top ETFs for a sector.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `KEY` | argument | ✅ | — | A valid sector key |
+| Parameter | Type     | Required | Default | Description        |
+| --------- | -------- | -------- | ------- | ------------------ |
+| `KEY`     | argument | ✅       | —       | A valid sector key |
 
 **Examples:**
 
@@ -724,9 +724,9 @@ yfin sector-top-etfs energy
 
 Get the top mutual funds for a sector.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `KEY` | argument | ✅ | — | A valid sector key |
+| Parameter | Type     | Required | Default | Description        |
+| --------- | -------- | -------- | ------- | ------------------ |
+| `KEY`     | argument | ✅       | —       | A valid sector key |
 
 **Examples:**
 
@@ -742,9 +742,9 @@ yfin sector-top-mutual-funds healthcare
 
 Get overview information for an industry.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `KEY` | argument | ✅ | — | A valid industry key (use `yfin sector-industries <sector-key>` to find) |
+| Parameter | Type     | Required | Default | Description                                                              |
+| --------- | -------- | -------- | ------- | ------------------------------------------------------------------------ |
+| `KEY`     | argument | ✅       | —       | A valid industry key (use `yfin sector-industries <sector-key>` to find) |
 
 **Examples:**
 
@@ -759,9 +759,9 @@ yfin industry-overview software-application
 
 Get research reports related to an industry.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `KEY` | argument | ✅ | — | A valid industry key |
+| Parameter | Type     | Required | Default | Description          |
+| --------- | -------- | -------- | ------- | -------------------- |
+| `KEY`     | argument | ✅       | —       | A valid industry key |
 
 **Examples:**
 
@@ -775,9 +775,9 @@ yfin industry-research-reports biotechnology
 
 Get the top companies within an industry.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `KEY` | argument | ✅ | — | A valid industry key |
+| Parameter | Type     | Required | Default | Description          |
+| --------- | -------- | -------- | ------- | -------------------- |
+| `KEY`     | argument | ✅       | —       | A valid industry key |
 
 **Examples:**
 
@@ -792,9 +792,9 @@ yfin industry-top-companies internet-retail
 
 Get the top growth companies in an industry.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `KEY` | argument | ✅ | — | A valid industry key |
+| Parameter | Type     | Required | Default | Description          |
+| --------- | -------- | -------- | ------- | -------------------- |
+| `KEY`     | argument | ✅       | —       | A valid industry key |
 
 **Examples:**
 
@@ -808,9 +808,9 @@ yfin industry-top-growth-companies software-infrastructure
 
 Get the top performing companies in an industry.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `KEY` | argument | ✅ | — | A valid industry key |
+| Parameter | Type     | Required | Default | Description          |
+| --------- | -------- | -------- | ------- | -------------------- |
+| `KEY`     | argument | ✅       | —       | A valid industry key |
 
 **Examples:**
 
@@ -826,15 +826,15 @@ yfin industry-top-performing-companies auto-manufacturers
 
 Run a stock screener. Supports predefined queries, simple filters (implicitly ANDed), or complex JSON queries.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `--filter` | option | ✅* | — | Filter in `<field> <operator> <value>` format. Can be specified multiple times. |
-| `--predefined` | option | ✅* | — | Predefined query name (use `yfin screen-predefined-queries` to list) |
-| `--json-query` | option | ✅* | — | Complex query in JSON format |
-| `--limit` | option | — | `12` | Maximum number of results |
-| `--offset` | option | — | `0` | Offset for pagination |
-| `--sort-field` | option | — | — | Field to sort results by (use `yfin screen-query-fields` to list) |
-| `--sort-order` | option | — | `desc` | Sort order: `asc` or `desc` |
+| Parameter      | Type   | Required | Default | Description                                                                     |
+| -------------- | ------ | -------- | ------- | ------------------------------------------------------------------------------- |
+| `--filter`     | option | ✅\*     | —       | Filter in `<field> <operator> <value>` format. Can be specified multiple times. |
+| `--predefined` | option | ✅\*     | —       | Predefined query name (use `yfin screen-predefined-queries` to list)            |
+| `--json-query` | option | ✅\*     | —       | Complex query in JSON format                                                    |
+| `--limit`      | option | —        | `12`    | Maximum number of results                                                       |
+| `--offset`     | option | —        | `0`     | Offset for pagination                                                           |
+| `--sort-field` | option | —        | —       | Field to sort results by (use `yfin screen-query-fields` to list)               |
+| `--sort-order` | option | —        | `desc`  | Sort order: `asc` or `desc`                                                     |
 
 > \*Exactly one of `--filter`, `--predefined`, or `--json-query` must be specified. They are mutually exclusive.
 
@@ -871,9 +871,9 @@ yfin screen --filter "peratio.lasttwelvemonths btwn 10,20"
 
 Get a list of all valid fields that can be used for screening.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| *(none)* | — | — | — | No parameters required |
+| Parameter | Type | Required | Default | Description            |
+| --------- | ---- | -------- | ------- | ---------------------- |
+| _(none)_  | —    | —        | —       | No parameters required |
 
 **Examples:**
 
@@ -887,9 +887,9 @@ yfin screen-query-fields
 
 Get a list of all valid values for a given field.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `--field` | option | ✅ | — | Field to get values for: `region`, `exchange`, `sector`, `industry`, `peer_group` |
+| Parameter | Type   | Required | Default | Description                                                                       |
+| --------- | ------ | -------- | ------- | --------------------------------------------------------------------------------- |
+| `--field` | option | ✅       | —       | Field to get values for: `region`, `exchange`, `sector`, `industry`, `peer_group` |
 
 **Examples:**
 
@@ -913,9 +913,9 @@ yfin screen-query-values --field industry
 
 Get a list of all available predefined screening queries.
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| *(none)* | — | — | — | No parameters required |
+| Parameter | Type | Required | Default | Description            |
+| --------- | ---- | -------- | ------- | ---------------------- |
+| _(none)_  | —    | —        | —       | No parameters required |
 
 **Examples:**
 

@@ -150,7 +150,7 @@ IntervalType = Annotated[
     ),
 ]
 
-default_count = 5
+default_count = 10
 
 CountType = Annotated[
     int,
