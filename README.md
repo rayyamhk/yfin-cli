@@ -1,89 +1,40 @@
 # yfin-cli
 
-A command-line interface for [Yahoo Finance](https://finance.yahoo.com/) data, powered by [yfinance](https://github.com/ranaroussi/yfinance).
+A command-line interface for Yahoo Finance data, powered by [yfinance](https://github.com/ranaroussi/yfinance).
 
-## Features
+## Why yfin-cli
 
-### Stock Data
+- Fast, scriptable access to Yahoo Finance data.
+- JSON or table output for easy piping.
+- Broad coverage: prices, financials, analyst data, screeners, sectors, industries.
 
-- **Historical Data** - OHLCV data with customizable intervals and date ranges
-- **Dividends** - Dividend history for any stock
-- **Fast Info** - Quick summary of key metrics (price, market cap, 52-week range)
-- **News** - Latest news articles for a ticker
+## Install
 
-### Market
+Requires Python 3.10+.
 
-- **Market Status** - Current US market status (open/closed, trading hours, timezone)
-
-### Financial Statements
-
-- **Income Statement** - Revenue, expenses, net income
-- **Balance Sheet** - Assets, liabilities, equity
-- **Cash Flow** - Operating, investing, financing activities
-- **Earnings Dates** - Past and upcoming earnings with EPS estimates
-- **SEC Filings** - SEC filings for a ticker
-
-### Analyst Data
-
-- **Recommendations** - Buy/sell/hold ratings summary
-- **Upgrades/Downgrades** - Analyst rating changes history
-- **Price Targets** - Analyst price target estimates
-- **Earnings/Revenue Estimates** - Forward-looking estimates
-- **EPS Trend & Revisions** - Earnings per share analysis
-- **Growth Estimates** - Projected growth rates
-
-### Insider & Institutional
-
-- **Insider Purchases/Transactions** - Insider trading activity
-- **Major Holders** - Top shareholders
-- **Institutional Holders** - Institutional ownership
-- **Mutual Fund Holders** - Mutual fund ownership
-
-### Calendar Events
-
-- **Earnings Calendar** - Upcoming earnings releases
-- **IPO Calendar** - Upcoming IPOs
-- **Economic Events** - Economic indicators and releases
-
-### Sector & Industry Analysis
-
-- **Sector Commands** - Industries, overview, top companies, ETFs, mutual funds
-- **Industry Commands** - Overview, top companies, growth companies, top performers
-
-### Stock Screener
-
-- **Screen** - Filter stocks by criteria (sector, market cap, beta, etc.)
-- **Predefined Queries** - Use built-in screeners (day gainers, most actives, undervalued stocks)
-- **JSON Queries** - Complex nested AND/OR logic for advanced screening
-
-## Installation
-
-### Using uv (Recommended)
+### From PyPI (recommended)
 
 ```bash
-uv tool install .
+pipx install yfin-cli
+# or
+pip install yfin-cli
+# or
+uv tool install yfin-cli
 ```
 
-### Using pip
+### From source
 
 ```bash
+git clone <your-repo-url>
+cd yfin-cli
+uv tool install .
+# or
 pip install .
 ```
 
 ## Usage
 
-```bash
-yfin [OPTIONS] COMMAND [ARGS]...
-```
-
-### Global Options
-
-| Option     | Description                     | Default |
-| ---------- | ------------------------------- | ------- |
-| `--output` | Output format (`json`, `table`) | `json`  |
-| `--help`   | Show help message               | —       |
-
-### Quick Examples
+### Quickstart
 
 ```bash
 # Get historical stock data
@@ -113,6 +64,13 @@ yfin --output table history AAPL --period 1y
 
 > For the complete command reference with all options and parameters, see [COMMANDS.md](COMMANDS.md).
 
+### Global options:
+
+| Option     | Description                     | Default |
+| ---------- | ------------------------------- | ------- |
+| `--output` | Output format (`json`, `table`) | `json`  |
+| `--help`   | Show help message               | —       |
+
 ## Available Commands
 
 | Category       | Commands                                                                                                                                                                 |
@@ -129,7 +87,7 @@ yfin --output table history AAPL --period 1y
 
 ## Development
 
-This project uses [uv](https://docs.astral.sh/uv/) for dependency management.
+This project uses uv for dependency management.
 
 ```bash
 # Install dependencies
