@@ -55,7 +55,7 @@ def test_news_with_tab(mock_ticker, invoke):
     result = invoke("news", "TSLA", "--tab", "news")
 
     assert result.exit_code == 0
-    mock_ticker.return_value.get_news.assert_called_once_with(5, "news")
+    mock_ticker.return_value.get_news.assert_called_once_with(10, "news")
 
 
 def test_news_invalid_tab(invoke):
