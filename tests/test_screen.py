@@ -3,6 +3,9 @@
 import pytest
 import typer
 import yfinance as yf
+from unittest.mock import patch
+from src.commands import screen as screen_cmd
+from src.typer import default_limit, default_offset
 from src.commands.screen import parse_filter, parse_json_query
 
 
@@ -160,3 +163,120 @@ def test_screen_query_values_valid_field_with_fixed_values(invoke):
     result = invoke("screen-query-values", "--field", "sector")
     assert result.exit_code == 0
     assert '"value": "Technology"' in result.output
+
+
+# ── screen command ────────────────────────────────────────────────────
+
+
+def _pick_predefined_query():
+    if not screen_cmd.PREDEFINED_QUERIES:
+        pytest.skip("No predefined queries available in yfinance")
+    return sorted(screen_cmd.PREDEFINED_QUERIES)[0]
+
+
+def _pick_valid_sort_field():
+    if "beta" in screen_cmd.VALID_FIELDS:
+        return "beta"
+    return sorted(screen_cmd.VALID_FIELDS)[0]
+
+
+@patch("src.commands.screen.yf.screen")
+def test_screen_predefined_query_basic(mock_screen, invoke_json):
+    query = _pick_predefined_query()
+    mock_screen.return_value = {"quotes": [{"symbol": "AAPL"}]}
+    code, data = invoke_json("screen", "--predefined", query)
+
+    assert code == 0
+    assert data[0]["symbol"] == "AAPL"
+
+    args, kwargs = mock_screen.call_args
+    assert args[0] == query
+    assert kwargs["offset"] == default_offset
+    assert kwargs["count"] == default_limit
+    assert "size" not in kwargs
+    assert kwargs["sortField"] is None
+    assert kwargs["sortAsc"] is False
+
+
+@patch("src.commands.screen.yf.screen")
+def test_screen_filters_single(mock_screen, invoke_json):
+    mock_screen.return_value = {"quotes": [{"symbol": "AAPL"}]}
+    code, data = invoke_json("screen", "--filter", "sector eq Technology")
+
+    assert code == 0
+    assert data[0]["symbol"] == "AAPL"
+
+    args, kwargs = mock_screen.call_args
+    assert isinstance(args[0], yf.EquityQuery)
+    assert kwargs["offset"] == default_offset
+    assert kwargs["size"] == default_limit
+    assert "count" not in kwargs
+    assert kwargs["sortAsc"] is False
+
+
+@patch("src.commands.screen.yf.screen")
+def test_screen_filters_with_sorting(mock_screen, invoke_json):
+    mock_screen.return_value = {"quotes": []}
+    sort_field = _pick_valid_sort_field()
+    code, _ = invoke_json(
+        "screen",
+        "--filter",
+        "sector eq Technology",
+        "--sort-field",
+        sort_field,
+        "--sort-order",
+        "asc",
+    )
+
+    assert code == 0
+    _, kwargs = mock_screen.call_args
+    assert kwargs["sortField"] == sort_field
+    assert kwargs["sortAsc"] is True
+
+
+@patch("src.commands.screen.yf.screen")
+def test_screen_json_query(mock_screen, invoke_json):
+    mock_screen.return_value = {"quotes": [{"symbol": "AAPL"}]}
+    json_query = '{"operator":"and","queries":["sector eq Technology","beta gt 1"]}'
+    code, data = invoke_json("screen", "--json-query", json_query)
+
+    assert code == 0
+    assert data[0]["symbol"] == "AAPL"
+
+    args, kwargs = mock_screen.call_args
+    assert isinstance(args[0], yf.EquityQuery)
+    assert kwargs["size"] == default_limit
+    assert "count" not in kwargs
+
+
+def test_screen_missing_query(invoke):
+    result = invoke("screen")
+    assert result.exit_code == 2
+    assert "Exactly one of --filter, --predefined, or --json-query" in result.output
+
+
+def test_screen_multiple_query_options(invoke):
+    query = _pick_predefined_query()
+    result = invoke(
+        "screen", "--predefined", query, "--filter", "sector eq Technology"
+    )
+    assert result.exit_code == 2
+    assert "Exactly one of --filter, --predefined, or --json-query" in result.output
+
+
+def test_screen_invalid_predefined_query(invoke):
+    result = invoke("screen", "--predefined", "not-a-query")
+    assert result.exit_code == 2
+    assert "Invalid predefined query" in result.output
+
+
+def test_screen_invalid_sort_field(invoke):
+    result = invoke(
+        "screen",
+        "--filter",
+        "sector eq Technology",
+        "--sort-field",
+        "not_a_field",
+    )
+    assert result.exit_code == 2
+    assert "Invalid field" in result.output
