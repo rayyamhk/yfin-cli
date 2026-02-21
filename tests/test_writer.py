@@ -96,6 +96,50 @@ def test_json_writer_list(capsys):
     assert data == [{"a": 1}, {"a": 2}]
 
 
+# ── JsonWriter: special characters (regression) ──────────────────────
+
+
+def test_json_writer_newlines(capsys):
+    """Newlines in values must be escaped, not rendered literally."""
+    writer = JsonWriter()
+    writer.write({"desc": "line1\nline2\nline3"})
+    output = capsys.readouterr().out
+    data = json.loads(output)
+
+    assert data == {"desc": "line1\nline2\nline3"}
+
+
+def test_json_writer_tabs_and_backslashes(capsys):
+    """Tabs and backslashes must survive round-trip through JSON."""
+    writer = JsonWriter()
+    writer.write({"path": "C:\\Users\\file", "col": "a\tb"})
+    output = capsys.readouterr().out
+    data = json.loads(output)
+
+    assert data == {"path": "C:\\Users\\file", "col": "a\tb"}
+
+
+def test_json_writer_quotes(capsys):
+    """Double quotes inside values must be escaped."""
+    writer = JsonWriter()
+    writer.write({"msg": 'He said "hello"'})
+    output = capsys.readouterr().out
+    data = json.loads(output)
+
+    assert data == {"msg": 'He said "hello"'}
+
+
+def test_json_writer_rich_markup(capsys):
+    """Rich markup-like strings (e.g. [bold]) must not be interpreted."""
+    writer = JsonWriter()
+    writer.write({"note": "[bold]important[/bold]", "tag": "[red]alert[/red]"})
+    output = capsys.readouterr().out
+    data = json.loads(output)
+
+    assert data["note"] == "[bold]important[/bold]"
+    assert data["tag"] == "[red]alert[/red]"
+
+
 # ── --output table CLI integration ────────────────────────────────────
 
 

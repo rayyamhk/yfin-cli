@@ -20,7 +20,9 @@ class WriterFactory:
 
 class JsonWriter(OutputWriter):
     def write(self, data: dict | list) -> None:
-        console_print(json.dumps(data, indent=2, default=str))
+        # Use print() instead of console_print() because Rich interprets
+        # escape sequences and markup, corrupting JSON with special characters.
+        print(json.dumps(data, indent=2, default=str))
 
 
 class TableWriter(OutputWriter):
