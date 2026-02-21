@@ -9,6 +9,7 @@ from .commands.stock import (
     history,
     dividends,
     fast_info,
+    info,
     news,
 )
 from .commands.market import market_status
@@ -80,6 +81,7 @@ def main(ctx: typer.Context, output: OutputType = default_output):
 app.command(rich_help_panel="Stock")(history)
 app.command(rich_help_panel="Stock")(dividends)
 app.command(rich_help_panel="Stock")(fast_info)
+app.command(rich_help_panel="Stock")(info)
 app.command(rich_help_panel="Stock")(news)
 
 app.command(rich_help_panel="Market")(market_status)

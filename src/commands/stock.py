@@ -83,6 +83,22 @@ def fast_info(
 
 
 @command
+def info(
+    ticker: TickerType,
+):
+    """
+    Get detailed info for a stock ticker.
+
+    Returns comprehensive information including company profile, financial metrics, and market data.
+    """
+    stock = yf.Ticker(ticker)
+    info = stock.get_info()
+    if info is None:
+        return None
+    return info
+
+
+@command
 def news(
     ticker: TickerType,
     count: CountType = default_count,

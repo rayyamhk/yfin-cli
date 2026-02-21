@@ -13,6 +13,7 @@ A comprehensive reference for every command in the `yfin` CLI.
   - [`history`](#history)
   - [`dividends`](#dividends)
   - [`fast-info`](#fast-info)
+  - [`info`](#info)
   - [`news`](#news)
 - [Market](#market)
   - [`market-status`](#market-status)
@@ -135,6 +136,26 @@ yfin fast-info TSLA
 
 # Get fast info for Microsoft
 yfin fast-info MSFT
+```
+
+---
+
+### `info`
+
+Get detailed info for a stock ticker. Returns comprehensive information including company profile, financial metrics, and market data.
+
+| Parameter | Type     | Required | Default | Description         |
+| --------- | -------- | -------- | ------- | ------------------- |
+| `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
+
+**Examples:**
+
+```bash
+# Get detailed info for Tesla
+yfin info TSLA
+
+# Get detailed info for Apple
+yfin info AAPL
 ```
 
 ---

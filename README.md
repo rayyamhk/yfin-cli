@@ -75,7 +75,7 @@ yfin --output table history AAPL --period 1y
 
 | Category       | Commands                                                                                                                                                                 |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Stock**      | `history`, `dividends`, `fast-info`, `news`                                                                                                                              |
+| **Stock**      | `history`, `dividends`, `fast-info`, `info`, `news`                                                                                                                      |
 | **Market**     | `market-status`                                                                                                                                                          |
 | **Calendar**   | `calendar-earnings`, `calendar-economic-events`, `calendar-ipo`                                                                                                          |
 | **Financials** | `income-stmt`, `balance-sheet`, `cashflow`, `earnings-dates`, `sec-filings`                                                                                              |
