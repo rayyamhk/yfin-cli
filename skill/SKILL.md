@@ -7,7 +7,17 @@ description: Provides comprehensive financial market data and news from Yahoo Fi
 
 `yfin` is the ultimate command-line interface for financial data, it provides immediate access to a massive spectrum of market intelligence—from historical price data and real-time news to deep-dive corporate financials, earnings calendars, and institutional holding records. While it excels at standard lookups across sectors and industries, the tool's true power lies in its robust stock screener: a highly flexible query engine capable of handling complex boolean logic and granular filtering, empowering you to search for and isolate exactly the assets you need based on virtually any criteria.
 
----
+## Prerequisites
+
+Assume `yfin` is already installed. However, if you attempt to run a `yfin` command and receive a "command not found" error, you MUST install it using one of the following methods:
+
+```bash
+uv tool install yfin-cli
+# or
+pipx install yfin-cli
+# or
+pip install yfin-cli
+```
 
 ## Quick Examples
 
