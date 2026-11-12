@@ -382,12 +382,17 @@ Get SEC filings for a ticker.
 | Parameter | Type     | Required | Default | Description         |
 | --------- | -------- | -------- | ------- | ------------------- |
 | `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
+| `--limit` | option | — | `20` | Maximum number of rows, newest first (`0` for all) |
+| `--offset` | option | — | `0` | Number of rows to skip, for pagination |
 
 **Examples:**
 
 ```bash
 # Get SEC filings for Apple
 yfin sec-filings AAPL
+
+# Only the 5 most recent
+yfin sec-filings AAPL --limit 5
 ```
 
 ---
@@ -418,11 +423,17 @@ Get the history of analyst upgrades and downgrades.
 | Parameter | Type     | Required | Default | Description         |
 | --------- | -------- | -------- | ------- | ------------------- |
 | `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
+| `--limit` | option | — | `20` | Maximum number of rows, newest first (`0` for all) |
+| `--offset` | option | — | `0` | Number of rows to skip, for pagination |
 
 **Examples:**
 
 ```bash
 yfin upgrades-downgrades AAPL
+
+# Older history, or everything
+yfin upgrades-downgrades AAPL --limit 20 --offset 20
+yfin upgrades-downgrades AAPL --limit 0
 ```
 
 ---
@@ -562,11 +573,16 @@ Get detailed insider transaction records (buys, sells, exercises).
 | Parameter | Type     | Required | Default | Description         |
 | --------- | -------- | -------- | ------- | ------------------- |
 | `TICKER`  | argument | ✅       | —       | Stock ticker symbol |
+| `--limit` | option | — | `20` | Maximum number of rows, newest first (`0` for all) |
+| `--offset` | option | — | `0` | Number of rows to skip, for pagination |
 
 **Examples:**
 
 ```bash
 yfin insider-transactions TSLA
+
+# Only the 5 most recent
+yfin insider-transactions TSLA --limit 5
 ```
 
 ---
@@ -856,10 +872,14 @@ Run a stock screener. Supports predefined queries, simple filters (implicitly AN
 | `--offset`     | option | —        | `0`     | Offset for pagination                                                           |
 | `--sort-field` | option | —        | —       | Field to sort results by (use `yfin screen-query-fields` to list)               |
 | `--sort-order` | option | —        | `desc`  | Sort order: `asc` or `desc`                                                     |
+| `--fields` | option | — | summary | Comma-separated result fields to return (`symbol` is always included) |
+| `--all-fields` | flag | — | off | Return every field Yahoo provides (~90 per result) instead of the summary |
 
 > \*Exactly one of `--filter`, `--predefined`, or `--json-query` must be specified. They are mutually exclusive.
 
 **Operators:** `eq`, `gt`, `gte`, `lt`, `lte`, `btwn`, `is-in`
+
+Each result includes a summary by default: `symbol`, `longName`, `quoteType`, `fullExchangeName`, `currency`, `regularMarketPrice`, `regularMarketChangePercent`, `regularMarketVolume`, `averageDailyVolume3Month`, `marketCap`, `trailingPE`, `forwardPE`, `epsTrailingTwelveMonths`, `priceToBook`, `dividendYield`, `fiftyTwoWeekLow`, `fiftyTwoWeekHigh`, `fiftyTwoWeekChangePercent`, `averageAnalystRating` (fields Yahoo has no value for are omitted).
 
 **Examples:**
 
@@ -884,6 +904,10 @@ yfin screen --predefined day_gainers --limit 25 --offset 0
 
 # Between filter (e.g., PE ratio between 10 and 20)
 yfin screen --filter "peratio.lasttwelvemonths btwn 10,20"
+
+# Pick result fields, or get all ~90
+yfin screen --predefined most_actives --fields "trailingPE,forwardPE,marketCap"
+yfin screen --predefined most_actives --all-fields
 ```
 
 ---

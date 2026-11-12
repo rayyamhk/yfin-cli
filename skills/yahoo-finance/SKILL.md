@@ -81,6 +81,16 @@ For the complete command reference with all options and parameters, see the corr
 
 - **Invalid arguments**: exit code `2` with a usage message on stderr.
 
+### Output size
+
+Output is compact JSON (no indentation) when piped, and trimmed to save context:
+
+- **Fields with no value are omitted** rather than set to `null`. A missing field means Yahoo has no value for it.
+- **Long histories are capped at the 20 most recent rows**: `upgrades-downgrades`, `insider-transactions`, `sec-filings`. Use `--limit N` (or `--limit 0` for all) and `--offset N` to see more.
+- **`screen` returns 19 summary fields per result** (price, change, volume, market cap, P/E, EPS, dividend yield, 52-week range, analyst rating). Use `--fields a,b,c` for specific fields, or `--all-fields` for all ~90.
+- **`history`** omits `Dividends`/`Stock Splits` columns when there were none in the range.
+- Numbers are rounded to 7 significant digits; values of 1,000,000 or more are whole numbers.
+
 ### Dates
 
 - Daily or longer data uses the **exchange's local date**, as `YYYY-MM-DD` (a Tokyo bar for Nov 6 is `2026-11-06`).

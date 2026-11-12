@@ -13,8 +13,34 @@ from ..typer import (
     ScreenQueryFieldType,
     ScreenSortOrderType,
     default_sort_order,
+    ScreenResultFieldsType,
+    ScreenAllFieldsType,
 )
 from ..utils import is_number, count_specified
+
+# Default fields per screener result. Yahoo returns ~90, mostly display and
+# internal metadata (triggerable, messageBoardId, gmtOffSetMilliseconds, ...).
+DEFAULT_RESULT_FIELDS = (
+    "symbol",
+    "longName",
+    "quoteType",
+    "fullExchangeName",
+    "currency",
+    "regularMarketPrice",
+    "regularMarketChangePercent",
+    "regularMarketVolume",
+    "averageDailyVolume3Month",
+    "marketCap",
+    "trailingPE",
+    "forwardPE",
+    "epsTrailingTwelveMonths",
+    "priceToBook",
+    "dividendYield",
+    "fiftyTwoWeekLow",
+    "fiftyTwoWeekHigh",
+    "fiftyTwoWeekChangePercent",
+    "averageAnalystRating",
+)
 
 VALID_FIELDS_DICT = yf.const.EQUITY_SCREENER_FIELDS
 VALID_VALUES_DICT = yf.const.EQUITY_SCREENER_EQ_MAP
@@ -209,18 +235,25 @@ def screen(
     limit: LimitType = default_limit,
     sort_field: ScreenQueryFieldType = None,
     sort_order: ScreenSortOrderType = default_sort_order,
+    fields: ScreenResultFieldsType = None,
+    all_fields: ScreenAllFieldsType = False,
 ):
     """
     Run a stock screener.
 
     Supports predefined queries, simple filters (implicitly ANDed), or complex JSON queries.
     Options --predefined, --filter, and --json-query are mutually exclusive.
+
+    Each result has a summary of key fields by default; use --fields to pick
+    fields or --all-fields for everything.
     """
     specified_count = count_specified(filters, predefined, json_query)
     if specified_count != 1:
         raise typer.BadParameter(
             "Exactly one of --filter, --predefined, or --json-query must be specified."
         )
+    if fields and all_fields:
+        raise typer.BadParameter("--fields and --all-fields are mutually exclusive.")
 
     if predefined:
         if predefined not in PREDEFINED_QUERIES:
@@ -257,4 +290,13 @@ def screen(
             sortAsc=sort_order == "asc",
         )
 
-    return response["quotes"]
+    quotes = response["quotes"]
+    if all_fields:
+        return quotes
+    if fields:
+        wanted = ["symbol"] + [
+            f for f in (x.strip() for x in fields.split(",")) if f and f != "symbol"
+        ]
+    else:
+        wanted = DEFAULT_RESULT_FIELDS
+    return [{k: q[k] for k in wanted if k in q} for q in quotes]

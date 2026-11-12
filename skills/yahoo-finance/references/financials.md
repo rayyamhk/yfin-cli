@@ -98,10 +98,15 @@ Get SEC filings for a ticker.
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
 | `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| `--limit` | option | — | `20` | Maximum number of rows, newest first (`0` for all) |
+| `--offset` | option | — | `0` | Number of rows to skip, for pagination |
 
 **Examples:**
 
 ```bash
 # Get SEC filings for Apple
 yfin sec-filings AAPL
+
+# Only the 5 most recent
+yfin sec-filings AAPL --limit 5
 ```

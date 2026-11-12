@@ -49,7 +49,20 @@ def history(
 
     stock = yf.Ticker(ticker)
     data_frame = stock.history(**kwargs)
+    if data_frame is not None:
+        # Corporate-action columns are 0 on almost every bar; keep them only
+        # when the range actually contains a dividend, split or capital gain.
+        data_frame = data_frame.drop(
+            columns=[
+                c
+                for c in _CORPORATE_ACTION_COLUMNS
+                if c in data_frame.columns and (data_frame[c] == 0).all()
+            ]
+        )
     return data_frame_to_list(data_frame)
+
+
+_CORPORATE_ACTION_COLUMNS = ("Dividends", "Stock Splits", "Capital Gains")
 
 
 @command

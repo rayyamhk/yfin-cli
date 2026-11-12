@@ -84,15 +84,31 @@ def _records(data_frame: DataFrame) -> list:
     return json.loads(data_frame.to_json(orient="records", date_format="iso"))
 
 
+def _has_meaningless_index(obj: DataFrame | Series) -> bool:
+    """An unnamed 0..n-1 index carries no information; keeping it would add an
+    "index": 0, 1, 2... field to every row."""
+    return isinstance(obj.index, pd.RangeIndex) and obj.index.name is None
+
+
+def paginate(rows: list | None, limit: int, offset: int) -> list | None:
+    """Return rows[offset:offset + limit]; limit 0 means no limit."""
+    if rows is None:
+        return None
+    return rows[offset:] if limit == 0 else rows[offset : offset + limit]
+
+
 def data_frame_to_list(data_frame: DataFrame, index_name: str | None = None) -> list:
     if data_frame is None:
         return None
-    return _records(data_frame.reset_index(names=index_name))
+    drop = index_name is None and _has_meaningless_index(data_frame)
+    return _records(data_frame.reset_index(names=index_name, drop=drop))
 
 
 def series_to_list(series: Series) -> list:
     if series is None:
         return None
+    if _has_meaningless_index(series):
+        return _records(series.reset_index(drop=True).to_frame())
     return _records(series.reset_index())
 
 

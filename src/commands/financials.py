@@ -8,8 +8,10 @@ from ..typer import (
     default_offset,
     LimitType,
     default_limit,
+    RecentLimitType,
+    default_recent_limit,
 )
-from ..utils import data_frame_to_list
+from ..utils import data_frame_to_list, paginate
 from ..decorators import command
 
 
@@ -75,9 +77,22 @@ def earnings_dates(
 @command
 def sec_filings(
     ticker: TickerType,
+    limit: RecentLimitType = default_recent_limit,
+    offset: OffsetType = default_offset,
 ):
     """
     Get SEC filings for a ticker.
     """
     stock = yf.Ticker(ticker)
-    return stock.get_sec_filings()
+    filings = paginate(stock.get_sec_filings(), limit, offset)
+    if filings is None:
+        return None
+    # epochDate duplicates date; maxAge is Yahoo cache metadata.
+    return [
+        {
+            k: v
+            for k, v in filing.items()
+            if k not in ("epochDate", "maxAge") and not (k == "exhibits" and not v)
+        }
+        for filing in filings
+    ]

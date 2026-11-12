@@ -1,7 +1,13 @@
 import yfinance as yf
-from ..typer import TickerType
+from ..typer import (
+    TickerType,
+    RecentLimitType,
+    default_recent_limit,
+    OffsetType,
+    default_offset,
+)
 from ..decorators import command
-from ..utils import data_frame_to_list
+from ..utils import data_frame_to_list, paginate
 
 
 @command
@@ -15,13 +21,17 @@ def recommendations(ticker: TickerType):
 
 
 @command
-def upgrades_downgrades(ticker: TickerType):
+def upgrades_downgrades(
+    ticker: TickerType,
+    limit: RecentLimitType = default_recent_limit,
+    offset: OffsetType = default_offset,
+):
     """
     Get the analyst upgrades and downgrades history for a stock ticker.
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_upgrades_downgrades()
-    return data_frame_to_list(data_frame)
+    return paginate(data_frame_to_list(data_frame), limit, offset)
 
 
 @command
@@ -104,13 +114,17 @@ def insider_purchases(ticker: TickerType):
 
 
 @command
-def insider_transactions(ticker: TickerType):
+def insider_transactions(
+    ticker: TickerType,
+    limit: RecentLimitType = default_recent_limit,
+    offset: OffsetType = default_offset,
+):
     """
     Get insider transactions for a stock ticker.
     """
     stock = yf.Ticker(ticker)
     data_frame = stock.get_insider_transactions()
-    return data_frame_to_list(data_frame)
+    return paginate(data_frame_to_list(data_frame), limit, offset)
 
 
 @command

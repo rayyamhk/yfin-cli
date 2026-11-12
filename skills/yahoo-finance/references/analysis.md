@@ -24,11 +24,17 @@ Get the history of analyst upgrades and downgrades.
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
 | `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| `--limit` | option | — | `20` | Maximum number of rows, newest first (`0` for all) |
+| `--offset` | option | — | `0` | Number of rows to skip, for pagination |
 
 **Examples:**
 
 ```bash
 yfin upgrades-downgrades AAPL
+
+# Older history, or everything
+yfin upgrades-downgrades AAPL --limit 20 --offset 20
+yfin upgrades-downgrades AAPL --limit 0
 ```
 
 ---
@@ -168,11 +174,16 @@ Get detailed insider transaction records (buys, sells, exercises).
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
 | `TICKER` | argument | ✅ | — | Stock ticker symbol |
+| `--limit` | option | — | `20` | Maximum number of rows, newest first (`0` for all) |
+| `--offset` | option | — | `0` | Number of rows to skip, for pagination |
 
 **Examples:**
 
 ```bash
 yfin insider-transactions TSLA
+
+# Only the 5 most recent
+yfin insider-transactions TSLA --limit 5
 ```
 
 ---

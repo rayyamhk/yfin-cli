@@ -108,6 +108,18 @@ LimitType = Annotated[
 
 default_offset = 0
 
+# Default row limit for long, newest-first histories (analyst actions, filings,
+# insider transactions), which otherwise return years of rows.
+default_recent_limit = 20
+
+RecentLimitType = Annotated[
+    int,
+    typer.Option(
+        "--limit",
+        help="Maximum number of rows, newest first (0 for all)",
+    ),
+]
+
 OffsetType = Annotated[
     int,
     typer.Option(
@@ -219,5 +231,21 @@ ScreenSortOrderType = Annotated[
     typer.Option(
         callback=validate_value_in_list(["asc", "desc"]),
         help="Sort order, can be 'asc' or 'desc'",
+    ),
+]
+
+ScreenResultFieldsType = Annotated[
+    str | None,
+    typer.Option(
+        "--fields",
+        help="Comma-separated result fields to return, e.g. 'symbol,trailingPE,marketCap' (symbol is always included)",
+    ),
+]
+
+ScreenAllFieldsType = Annotated[
+    bool,
+    typer.Option(
+        "--all-fields",
+        help="Return every field Yahoo provides (~90 per result) instead of the default summary",
     ),
 ]

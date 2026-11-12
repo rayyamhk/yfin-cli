@@ -1,5 +1,6 @@
 """Tests for the screen command parsing functions."""
 
+import json
 import pytest
 import typer
 import yfinance as yf
@@ -162,7 +163,7 @@ def test_screen_query_values_field_with_no_fixed_values(invoke):
 def test_screen_query_values_valid_field_with_fixed_values(invoke):
     result = invoke("screen-query-values", "--field", "sector")
     assert result.exit_code == 0
-    assert '"value": "Technology"' in result.output
+    assert {"value": "Technology"} in json.loads(result.output)
 
 
 def test_screen_query_fields_basic(invoke_json):
