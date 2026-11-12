@@ -1,9 +1,16 @@
 """Shared test fixtures for yfin-cli tests."""
 
 import json
-import pytest
-from typer.testing import CliRunner
-from src.cli import app
+import os
+
+# Typer forces colored output when GITHUB_ACTIONS (or FORCE_COLOR/PY_COLORS) is
+# set, which injects ANSI codes into result.output and breaks text assertions in
+# CI. Must be set before Typer's rich_utils is imported.
+os.environ["_TYPER_FORCE_DISABLE_TERMINAL"] = "1"
+
+import pytest  # noqa: E402
+from typer.testing import CliRunner  # noqa: E402
+from src.cli import app  # noqa: E402
 
 
 @pytest.fixture
