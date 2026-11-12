@@ -1,6 +1,7 @@
 """Tests for the earnings-dates command."""
 
 import pandas as pd
+import pytest
 from unittest.mock import patch
 
 
@@ -43,6 +44,30 @@ def test_earnings_dates_with_options(mock_ticker, invoke_json):
     mock_ticker.return_value.get_earnings_dates.assert_called_once_with(
         limit=5, offset=10
     )
+
+
+@patch("src.commands.financials.yf.Ticker")
+def test_earnings_dates_trims_to_limit(mock_ticker, invoke_json):
+    # yfinance returns a full page (25+ rows) whatever limit it is given.
+    dates = pd.date_range("2020-01-01", periods=25, freq="QS")[::-1]
+    page = pd.DataFrame({"EPS Estimate": range(25)}, index=dates)
+    mock_ticker.return_value.get_earnings_dates.return_value = page
+
+    code, data = invoke_json("earnings-dates", "MSFT", "--limit", "6")
+
+    assert code == 0
+    assert len(data) == 6
+    # Newest first, starting from the first row yfinance returned.
+    assert [row["EPS Estimate"] for row in data] == [0, 1, 2, 3, 4, 5]
+
+
+@pytest.mark.parametrize("limit", ["0", "101"])
+@patch("src.commands.financials.yf.Ticker")
+def test_earnings_dates_limit_out_of_range(mock_ticker, invoke, limit):
+    result = invoke("earnings-dates", "MSFT", "--limit", limit)
+
+    assert result.exit_code == 2
+    mock_ticker.return_value.get_earnings_dates.assert_not_called()
 
 
 @patch("src.commands.financials.yf.Ticker")

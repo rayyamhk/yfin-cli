@@ -6,8 +6,8 @@ from ..typer import (
     default_frequency,
     OffsetType,
     default_offset,
-    LimitType,
     default_limit,
+    EarningsDatesLimitType,
     RecentLimitType,
     default_recent_limit,
 )
@@ -63,14 +63,18 @@ def cashflow(
 @command
 def earnings_dates(
     ticker: TickerType,
-    limit: LimitType = default_limit,
+    limit: EarningsDatesLimitType = default_limit,
     offset: OffsetType = default_offset,
 ):
     """
     Get earnings dates, estimates, and reported EPS for a ticker.
     """
     stock = yf.Ticker(ticker)
+    # yfinance applies offset on Yahoo's side but rounds limit up to a page
+    # size (25, 50 or 100) and returns the whole page, so trim it here.
     data_frame = stock.get_earnings_dates(limit=limit, offset=offset)
+    if data_frame is not None:
+        data_frame = data_frame.head(limit)
     return data_frame_to_list(data_frame)
 
 

@@ -106,6 +106,17 @@ LimitType = Annotated[
     ),
 ]
 
+# yfinance's earnings-dates scraper rejects limits outside 1-100.
+EarningsDatesLimitType = Annotated[
+    int,
+    typer.Option(
+        "--limit",
+        min=1,
+        max=100,
+        help="Maximum number of results to show (1-100)",
+    ),
+]
+
 default_offset = 0
 
 # Default row limit for long, newest-first histories (analyst actions, filings,

@@ -357,7 +357,7 @@ Get earnings dates, estimates, and reported EPS for a ticker.
 | Parameter  | Type     | Required | Default | Description               |
 | ---------- | -------- | -------- | ------- | ------------------------- |
 | `TICKER`   | argument | ✅       | —       | Stock ticker symbol       |
-| `--limit`  | option   | —        | `12`    | Maximum number of results |
+| `--limit`  | option   | —        | `12`    | Maximum number of results, newest first (1-100) |
 | `--offset` | option   | —        | `0`     | Offset for pagination     |
 
 **Examples:**
