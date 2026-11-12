@@ -1,0 +1,35 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write # required for PyPI trusted publishing
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Check tag matches package version
+        run: |
+          version=$(uv version --short)
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match pyproject version $version"
+            exit 1
+          fi
+
+      - name: Run tests
+        run: uv run --frozen pytest -q
+
+      - name: Build
+        run: uv build
+
+      - name: Publish
+        run: uv publish --trusted-publishing always
