@@ -115,12 +115,12 @@ OffsetType = Annotated[
     ),
 ]
 
-default_market_cap = 0
+default_market_cap = None
 
 MarketCapType = Annotated[
-    int,
+    int | None,
     typer.Option(
-        help="Market cap of the company",
+        help="Minimum market cap filter, e.g. 10000000000 for $10B (default: no filter)",
     ),
 ]
 

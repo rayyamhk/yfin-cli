@@ -96,8 +96,15 @@ uv sync
 # Run the CLI
 uv run yfin --help
 
-# Run tests
+# Run all tests (offline + live)
 uv run pytest
+
+# Run offline tests only (yfinance is mocked, no network)
+uv run pytest -m offline
+
+# Run live tests only: every command against Yahoo Finance with the installed yfinance.
+# Run before releasing and after upgrading yfinance.
+uv run pytest -m live
 
 # Format code
 uv run ruff format .

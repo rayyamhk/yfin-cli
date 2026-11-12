@@ -22,6 +22,12 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
 
+[tool.pytest.ini_options]
+markers = [
+    "live: calls Yahoo Finance over the network (run with: pytest -m live)",
+    "offline: mocked, no network; applied automatically to every non-live test (run with: pytest -m offline)",
+]
+
 [tool.uv]
 package = true
 

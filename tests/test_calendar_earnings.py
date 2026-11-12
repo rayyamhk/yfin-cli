@@ -82,3 +82,27 @@ def test_calendar_earnings_api_error(mock_calendars, invoke):
 
     assert result.exit_code == 1
     assert "Unexpected error" in result.output
+
+
+@patch("src.commands.calendar.yf.Calendars")
+def test_calendar_earnings_no_market_cap_filter_by_default(mock_calendars, invoke_json):
+    mock_calendars.return_value.get_earnings_calendar.return_value = (
+        create_mock_earnings_data()
+    )
+    code, _ = invoke_json("calendar-earnings")
+
+    assert code == 0
+    call_kwargs = mock_calendars.return_value.get_earnings_calendar.call_args[1]
+    assert "market_cap" not in call_kwargs
+
+
+@patch("src.commands.calendar.yf.Calendars")
+def test_calendar_earnings_with_market_cap(mock_calendars, invoke_json):
+    mock_calendars.return_value.get_earnings_calendar.return_value = (
+        create_mock_earnings_data()
+    )
+    code, _ = invoke_json("calendar-earnings", "--market-cap", "10000000000")
+
+    assert code == 0
+    call_kwargs = mock_calendars.return_value.get_earnings_calendar.call_args[1]
+    assert call_kwargs["market_cap"] == 10000000000

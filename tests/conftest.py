@@ -13,6 +13,17 @@ from typer.testing import CliRunner  # noqa: E402
 from src.cli import app  # noqa: E402
 
 
+@pytest.hookimpl(tryfirst=True)
+def pytest_collection_modifyitems(items):
+    """Mark every test that isn't `live` as `offline`, so `-m offline` selects them.
+
+    tryfirst: must run before pytest applies the -m filter.
+    """
+    for item in items:
+        if "live" not in item.keywords:
+            item.add_marker(pytest.mark.offline)
+
+
 @pytest.fixture
 def runner():
     return CliRunner()
