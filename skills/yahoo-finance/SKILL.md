@@ -61,3 +61,43 @@ For the complete command reference with all options and parameters, see the corr
 | **Screen**     | `screen`, `screen-query-fields`, `screen-query-values`, `screen-predefined-queries`                                                                                                                                                                                                                             | `references/screen.md`     |
 | **Sector**     | `sector-keys`, `sector-industries`, `sector-overview`, `sector-research-reports`, `sector-top-companies`, `sector-top-etfs`, `sector-top-mutual-funds`                                                                                                                                                          | `references/sector.md`     |
 | **Industry**   | `industry-overview`, `industry-research-reports`, `industry-top-companies`, `industry-top-growth-companies`, `industry-top-performing-companies`                                                                                                                                                                | `references/industry.md`   |
+## Reading the Output
+
+### Success, empty results, and errors
+
+- **Success**: exit code `0`, JSON on stdout (a list of objects, or one object).
+- **Empty list `[]`**: the ticker exists but has no data of that kind (e.g. `income-stmt` for an ETF). It is not an error.
+- **Error**: exit code `1`, nothing on stdout, and one JSON line on stderr:
+
+  ```json
+  {"error": "not_found", "message": "Ticker 'XYZ' not found on Yahoo Finance"}
+  ```
+
+  | `error`     | Meaning                                                                           |
+  | ----------- | --------------------------------------------------------------------------------- |
+  | `not_found` | The ticker doesn't exist (or is delisted). Check the symbol and its exchange suffix (e.g. `7203.T`, `VOD.L`). |
+  | `no_data`   | Nothing returned; for sector/industry commands the key is likely wrong (the message says how to list valid keys). |
+  | `error`     | Anything else (network, Yahoo outage, rate limit). Retrying may help.               |
+
+- **Invalid arguments**: exit code `2` with a usage message on stderr.
+
+### Dates
+
+- Daily or longer data uses the **exchange's local date**, as `YYYY-MM-DD` (a Tokyo bar for Nov 6 is `2026-11-06`).
+- Timestamps keep their time and **UTC offset** (e.g. `2026-11-11T09:30:00-05:00`). Timestamps without an offset are as Yahoo provides them.
+
+### Percentages: check the units
+
+Yahoo mixes two conventions, sometimes for the same quantity. Before reporting a percentage, check which one the field uses.
+
+**Fractions** (`0.0663` means 6.63%): this is the default for ratios, e.g. `pctHeld`, `pctChange`, `heldPercentInsiders`, `heldPercentInstitutions`, `shortPercentOfFloat`, `payoutRatio`, `profitMargins`, `grossMargins`, `revenueGrowth`, `earningsGrowth`, `52WeekChange`, `trailingAnnualDividendYield`, `ytd return`, `market weight`, `growth`, `stockTrend`/`indexTrend`, and `surprisePercent` in `earnings-history`. Values in `major-holders` are fractions too, except `institutionsCount`.
+
+**Already percentages** (`5.8` means 5.8%):
+
+| Command(s)              | Fields                                                     |
+| ----------------------- | ---------------------------------------------------------- |
+| `earnings-dates`        | `Surprise(%)`                                              |
+| `info`, `screen`        | `dividendYield`, `fiveYearAvgDividendYield`                |
+| `info`, `screen`        | `regularMarketChangePercent`, `fiftyTwoWeekChangePercent`  |
+
+For example, the same quarter's earnings surprise is `5.8` in `earnings-dates` but `0.058` in `earnings-history`.

@@ -2,10 +2,13 @@ import json
 import typer
 from typing import Any, Callable
 from datetime import datetime, timedelta
+import pandas as pd
 from pandas import DataFrame, Series
 from rich.console import Console
 
 console = Console()
+# Errors and warnings go to stderr so stdout only ever carries command output.
+err_console = Console(stderr=True)
 
 
 def console_print(content: Any):
@@ -13,11 +16,11 @@ def console_print(content: Any):
 
 
 def console_print_error(content: Any):
-    console.print(f"[red]{content}[/red]")
+    err_console.print(f"[red]{content}[/red]")
 
 
 def console_print_warning(content: Any):
-    console.print(f"[yellow]{content}[/yellow]")
+    err_console.print(f"[yellow]{content}[/yellow]")
 
 
 def count_specified(*args: str | None) -> int:
@@ -53,20 +56,44 @@ def is_number(s: str) -> bool:
         return False
 
 
+def _format_datetime_column(column: Series) -> Series:
+    """Format a datetime column as strings, in its own timezone.
+
+    pandas' to_json converts timezone-aware values to UTC, which shifts
+    exchange-local midnights onto the previous day for markets east of UTC
+    (a Tokyo daily bar for Nov 6 becomes "2026-11-05T15:00:00Z").
+
+    Columns where every value is midnight (daily bars, statement periods,
+    dividend dates) become plain dates. Anything with a time of day keeps it,
+    with its UTC offset when the data is timezone-aware.
+    """
+    values = column.dropna()
+    if values.empty or (values == values.dt.normalize()).all():
+        formatted = column.dt.strftime("%Y-%m-%d")
+    else:
+        formatted = column.map(lambda ts: ts.isoformat() if pd.notna(ts) else None)
+    return formatted.astype(object).where(column.notna(), None)
+
+
+def _records(data_frame: DataFrame) -> list:
+    data_frame = data_frame.copy()
+    for i in range(data_frame.shape[1]):
+        column = data_frame.iloc[:, i]
+        if pd.api.types.is_datetime64_any_dtype(column):
+            data_frame.isetitem(i, _format_datetime_column(column))
+    return json.loads(data_frame.to_json(orient="records", date_format="iso"))
+
+
 def data_frame_to_list(data_frame: DataFrame, index_name: str | None = None) -> list:
     if data_frame is None:
         return None
-    return json.loads(
-        data_frame.reset_index(names=index_name).to_json(
-            orient="records", date_format="iso"
-        )
-    )
+    return _records(data_frame.reset_index(names=index_name))
 
 
 def series_to_list(series: Series) -> list:
     if series is None:
         return None
-    return json.loads(series.reset_index().to_json(orient="records", date_format="iso"))
+    return _records(series.reset_index())
 
 
 def validate_value_in_list(valid_values: list[str]) -> Callable[[str], str]:

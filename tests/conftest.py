@@ -24,6 +24,14 @@ def pytest_collection_modifyitems(items):
             item.add_marker(pytest.mark.offline)
 
 
+@pytest.fixture(autouse=True)
+def _offline_ticker_check(request, monkeypatch):
+    """Offline tests mock yfinance, so the real ticker-existence check would hit
+    the network. Treat every ticker as existing unless a test overrides it."""
+    if request.node.get_closest_marker("live") is None:
+        monkeypatch.setattr("src.decorators.ticker_exists", lambda ticker: True)
+
+
 @pytest.fixture
 def runner():
     return CliRunner()
