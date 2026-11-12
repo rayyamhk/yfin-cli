@@ -73,7 +73,7 @@ yfin fast-info MSFT
 
 ---
 
-### `info`
+## `info`
 
 Get detailed info for a stock ticker. Returns comprehensive information including company profile, financial metrics, and market data.
 

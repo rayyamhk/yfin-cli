@@ -10,7 +10,7 @@ Get the earnings calendar — upcoming and recent earnings announcements.
 | `--end` | option | — | today + 7 days | End date (`YYYY-MM-DD`) |
 | `--limit` | option | — | `12` | Maximum number of results |
 | `--offset` | option | — | `0` | Offset for pagination |
-| `--market-cap` | option | — | none | Minimum market cap filter |
+| `--market-cap` | option | — | none | Minimum market cap in USD, as a plain number (e.g. `10000000000` for $10B) |
 
 **Examples:**
 
