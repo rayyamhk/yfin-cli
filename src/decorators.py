@@ -1,8 +1,17 @@
 import typer
-import click
 from functools import wraps
 from .writer import WriterFactory
 from .utils import console_print_error, console_print_warning
+from .typer import default_output
+
+# Global options set by the app callback before any command runs. Kept here
+# rather than on the click context because newer Typer versions vendor click
+# and no longer expose click.get_current_context().
+_settings = {"output": default_output}
+
+
+def set_output_format(output: str) -> None:
+    _settings["output"] = output
 
 
 def command(func):
@@ -20,9 +29,7 @@ def command(func):
             if not isinstance(data, (dict, list)):
                 raise ValueError(f"Unsupported data type: {type(data).__name__}")
 
-            ctx = click.get_current_context()
-            output_type = ctx.obj.get("output")
-            writer = WriterFactory.get_writer(output_type)
+            writer = WriterFactory.get_writer(_settings["output"])
             writer.write(data)
         except (typer.Exit, typer.Abort, typer.BadParameter):
             raise

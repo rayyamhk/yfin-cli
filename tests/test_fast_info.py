@@ -66,4 +66,5 @@ def test_fast_info_api_error(mock_ticker, invoke):
 def test_fast_info_help(invoke):
     result = invoke("fast-info", "--help")
     assert result.exit_code == 0
-    assert "TICKER" in result.output
+    # Typer renders the argument as TICKER (<0.22) or {ticker} (newer)
+    assert "ticker" in result.output.lower()

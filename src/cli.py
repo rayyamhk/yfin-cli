@@ -5,6 +5,7 @@ yfin CLI - A command-line tool for Yahoo Finance data
 
 import typer
 from .typer import OutputType, default_output
+from .decorators import set_output_format
 from .commands.stock import (
     history,
     dividends,
@@ -73,9 +74,8 @@ app = typer.Typer(
 
 
 @app.callback()
-def main(ctx: typer.Context, output: OutputType = default_output):
-    ctx.ensure_object(dict)
-    ctx.obj["output"] = output
+def main(output: OutputType = default_output):
+    set_output_format(output)
 
 
 app.command(rich_help_panel="Stock")(history)
